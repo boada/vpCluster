@@ -1,0 +1,270 @@
+Instructions for VIRUS-P observing (MASSIVE survey):
+Nicholas McConnell, 3/7/2014 -- updated 12/15/2014
+
+
+0.)  If you get started 2 hr before sunset, you will have plenty of time (including dinner).
+
+     Overall timeline (also noted in steps below)
+     Sunset - 2:00 :  set up UIs, refill dewar, test the grating settings, record bias frames, eat dinner, open dome
+     Sunset - 0:15 :  twilight flats
+     Sunset + 0:10 :  close dome, record arcs, set up guider, open dome
+     18-deg - 0:20 :  observe standard star
+     18-deg + 0:10 :  begin observing galaxies
+
+
+1.)  Log into oberon to operate VIRUS-P.
+     User = nmcc
+     Pwd = Ly_1216nmcc
+
+2.)  In right-hand monitor, open:
+     - TCSGUI (TCS icon at bottom of desktop)
+     - XReport window (XREP icon at bottom of desktop)
+     - Terminal
+
+3.)  In terminal, cd /data1/oberon/nmcc
+     Make a new directory for tonight
+
+4.)  In left-hand monitor, open:
+     - ICE 
+     - IRAF
+
+5.)  In ICE xgterm window:
+     cd ice
+     cl
+     cd [data directory you created]
+     icex
+     mytasks
+     status
+     unload
+     status
+     bias
+
+     This will write a single bias frame to test.fits and spit out statistics.  The noise level should be around 3.6 - 3.8 electrons.  Now is the time to troubleshoot and/or call to help if there are any problems.
+
+6.)  Confirm detector and filename settings.
+     In ICE window, type  "epar detpars"
+     Check that colbin=1, rowbin=1, integra=2.  Type ":q" to exit.
+     Type "epar obspars"
+     Name yourself as the observer.  To keep with the MASSIVE file naming convention, check that rootnam=jjj, and sequenc= the next frame number to be written.  For December 2014 observations, you should begin at sequenc=5427, or whatever is already set (if > 5427).  The next frame will thus be written to jjj5427.fits.
+
+7.)  Open emacs and start a logsheet.  
+     One format you can copy is /home/oberon/nmcc/jjjlog_201403
+     Or upload the template logsheet for December 2014
+
+8.)  Sometime before dinner, go out to the dome, raise the east platform to stand level with VIRUS-P, and refill the gold dewar from the liquid nitrogen cart nearby.  The dewar must be refilled every ~24 hr.
+
+9.)  For your first night, it's a good idea to take at least one test arc before dinner, so there's time to fix the grating if it was installed improperly.  Close the dome and turn on the Hg and Cd arc lamps (if not set up yet, you will have to remove the gas tubes from the black suitcase on the dome pier and screw them in).  Move the telescope to Az = 180, El = 20.  Put up the windscreen (using the yellow handpaddle by the dome floor control box) to reflect the light.  The lamps take a couple of minutes to warm up.
+
+10.)  In ICE, type "comp" and follow the prompts.  20s is a good exposure time.  Start with one frame and check that there are three faint lines near the left edge and a bright doublet near the right edge (see arcHgCd_lowres_example.ps).  If not, the grating may have been installed at the wrong angle, and you need to call Dave Doss.  If the grating settings are OK and it's 5:00 or earlier, you have time to finish your arcs before dinner.  Take 10 more "comp" exposures at 20s.  Turn off the arc lamps and lower the windscreen.
+
+11.)  In December, dinner is at 5:30 p.m. and your optimal window for taking twilight flats is ~6:00-6:15 p.m.  If you feel very secure about the weather (low wind, low dust, zero precipitation), open the dome before you go to dinner.   
+
+If you haven't moved the telescope yet, you need to turn on the hydraulic bearings (green button) and declination and hour angle motors (red buttons) in the "closet" room near the elevator.  Then reset the telescope console on the dome floor.  Finally, in TCSGUI click Tools --> Enable Dome Automation.  Open the dome first (after checking weather conditions!), then the mirror cover.   Move the telescope to Az = 270, El = 80 (Next --> Manual Entry --> Az/El in TCSGUI).
+
+If you are leaving the dome open while you eat, at least close the mirror cover.  If it isn't safe to keep the dome open, you'll have to wolf down a meal and head back to the telescope around 5:45, or have a leisurely dinner and take your twilight flats in the morning.  
+
+
+12.)  Let VIRUS-P take bias frames while you eat.  In the ICE window, type "zero" and follow the prompts.  Tell it to take 11 bias frames, and go to dinner once it starts.  Alternatively, you can do these at the end of the night (especially if you have to stay up for morning twiflats).
+
+13.)  Begin twilight flats 15 minutes before sunset.  DON'T FORGET TO OPEN THE MIRROR COVER.  In ICE, type "autotwi" and follow the prompts.  If the first exposure doesn't look like a flat, you might have forgotten to open the mirror cover.  
+
+
+If you didn't complete your arc exposures before dinner, do them immediately after twilight flats (steps 9-10 above).
+
+
+
+14.)  While flats and/or arcs are going, set up your target list and get the guider started.
+
+14a.)  In the TCSGUI window, go to  File --> Open/Transfer Work List.  A window will appear.  Click "Add" and then browse for the worklist you want to load.  I will try to upload the worklist for this run to  /home/oberon/nmcc/MASSIVE_Dec2014.wrk.  Look for it there, or upload a copy from your personal computer.
+       Once you've added the worklist, go to  Next --> Worklists  and choose the list you want.  Two windows will pop up: a target list and a sky chart.  These should stay open all night.  If you edit your worklist you should Add it again in TCSGUI to see the changes reflected.
+
+14b.)  Go to a blank desktop in the right-hand monitor and click the "GDR" icon at the bottom.  This will open a shell window logging you into atlas.  Passwd = Ly_1216nmcc .  In atlas, make a directory where you want to store the guider images, and cd into it.  Then type ~pso/vagdr .  This will bring up the guider GUI.
+
+14c.)  Now you will open lots of guider windows:
+       - Expose --> Guider opens the Guider Window 
+       - Expose --> Setup opens the Exposure Setup window
+       - View --> Setup opens the View Setup window
+
+       In the Guider Window...
+       - Click "History Window" 
+       - Click "Display Charts."  In that window, click "Scale" at the bottom.
+       - Click "Specify Fiducial" (opens Fiducial Location and Nonsidereal Offset window)
+       - Click "Full Frame Read"
+       
+       Now you should have 8 windows open.  That is why we started from a blank desktop.
+
+14d.)  Important window #1: Fiducial Location and Nonsideral Offset
+       This will be the window we use to set up autoguiding for each target (step 19).  For now, click "Load" to load your premade list of guide star coordinates (XY pix where the guide star should fall on the camera).  Check for a ready-made list at /home/atlas/nmcc/fiducial/MASSIVE_Dec2014.fiducial , or upload your own copy.  
+       This is also a good time to get out your printed finding charts and have them nearby.
+
+14e.)  Important window #2: View Setup.
+       Set the clipping to 99% or 99.5%.  This will make it much easier to see faint stars in your guide field.
+
+14f.)  Important window #3: Charts
+       This will help you determine your data quality.  Set the top panel to "Flux" or "Magnitude."  Set the bottom panel to "FWHM" to keep track of seeing.
+
+14g.)  Not-so-important window #1 (skip if falling behind): Exposure Setup
+       You can adjust the exposure time of your guider frames here or in the Guider Window
+       To write out frames to your working directory, click "Autosave."  Set a filename and counter.  Click "Time" and adjust the time to save one frame every few minutes.
+
+14h.)  Not-so-important window #2: Chart Scaling
+       Set the parameters so that your plots in the Chart window are useful.
+
+14i.)  Protip: in Guider Window, set Maximum Correction to 5.0 arcsec
+
+
+
+15.)  When twiflats and/or arcs are done, turn off the lamps and open the dome again.  Once again, double-check that you have opened the mirror cover.  
+
+
+
+16.)  Set up the telescope pointing.  This is essential during cold weather.
+
+16a.)  In the TCSGUI window, go to  Next --> BSC Stars Near Zenith .  In the sky chart that pops up, click on a star near zenith.  Then click "Go Next" in TCSGUI.  Go outside with a flashlight and move the telescope.  Start exposing the guider camera if you haven't already.
+
+16b.)  The guider camera should not show any bright objects, since the guider field is 9 arcmin north of the spectrograph field.  Click on "Offset" at the left of the TCSGUI window.  This will bring up a handpaddle.  Enter a step size of 540 arcsec and click "S", to slew the telescope south.  
+
+16c.)  Hopefully your offset in step 16b brings a very bright star somewhere on the guider field.  If not, you may have to fish around until you find it (especially in cold weather, when the telescope pointing can be miserable).  Or call Dave Doss, who can offer some pointers.
+
+16d.)  Once you see the star in your guider field, you want to move it to the nominal pointing center (exactly 540" north of the spectrograph center).  In the guider GUI, select Marker --> Load Markers.  This will bring up a red circle and X near the right-hand side of the guider screen, representing the nominal pointing center.   
+
+To steer the telescope using the guider GUI, click Marker --> Create --> Objdes From and put a marker down on the star's current location.  Then click Marker --> Create --> Objind To and put a marker down on the pointing center.  Finally, click "Move Scope" in the bottom right of the window.  
+
+16e.)  Once the bright star is on the pointing center in your guider field, use the TCSGUI handpaddle to slew 540 arcsec North.  This should put the star back on the spectrograph.
+
+16f.)  To confirm the pointing, take a short exposure (~1s in clear weather).  In ICE, type "object" and follow the prompts.  Once the exposure has read out, your DS9 window should show a bright horizontal streak near the middle of the frame.
+
+16g.)  Dither and repeat as necessary until the star is approximately at the center of your VIRUS-P frame (middle third of the frame is probably good enough).  Once it is centered, you should zero the telescope offset to store the pointing solution.
+      At the left of the TCSGUI window, click "Zero --> New HA/Dec Constant Zero Points"
+      A warning box will appear.  Click Yes.
+
+16h.)  Protip: if the telescope is having trouble with your desired offsets (e.g. you slew north, then south, and don't end up back where you started), you can adjust the steering rate as follows:
+	In TSCGUI, go to  Tools --> Handpaddle Rates
+	Reduce the Reference Position Rate.
+	Incidentally, you can save some time on large slews (switching targets) by increasing the Analog Handpaddle Slew rate.
+
+
+
+
+17.)  Choose your first real target.   A good overall procedure is to observe a standard star starting ~20 minutes before 18-degree twilight, then go to your first galaxy.  Jeremy reports that the sky spectra aren't totally clean until ~10 minutes after 18-degree twilight, so consider waiting until this point to start your galaxy observations (and stop observing galaxies 10 minutes before 18-deg twilight in the morning).
+
+18.)  Go to your first target.  In your TCSGUI worklist, select the object you want.  If you are going to a galaxy, your first field should be the sky field.  
+      **To actually set this as the next object, you must click "Apply."** 
+      The Sky Plot window will highlight the current telescope position (big cross) and your next target (little cross).  Clicking on an object in this window will automatically set it as Next.  But for dithering between nearby science and sky fields, you should use the worklist window and "Apply."  
+
+      Confirm that "Next Obj" near the bottom of the TCSGUI window is where you want to go, then click "Go Next."  Go outside with a flashlight to move the telescope.
+
+      In the bottom left of the main guider window (the one where the images will appear), click "Start Imaging."
+
+
+19.)  If your target is a standard star, go to step 18a below.
+      If your target is a galaxy, go to step 18b below.
+
+
+20.)  At any convenient point, feel free to adjust the focus with the yellow handpaddle next to the right-hand monitor.  Move the joystick up and down and monitor the reported FWHM in the Charts window.  A step size of 100-200 in focus should be enough to see a change in the apparent FWHM.  Find a good focus value by trial and error.  One adjustment per night should suffice.  Don't worry if you never get to this step (unless the apparent seeing is ~4").
+
+21.)  When your last science target and/or standard star is complete, close the dome and do another set of arc frames.  Take some more bias frames if you want.  Reopen the dome.  Wait until ~10 minutes before sunrise and do a set of morning twilight flats.
+
+22.)  Park the scope (Next --> Stow) in TCSGUI, close the dome, and tap "Emergency Stop" to secure the telescope.  Bedtime, finally!
+
+
+
+
+
+19a.) PROCEDURE for OBSERVING STANDARD STARS
+
+You should take a standard star (WD spectrophotometric) sequence once per night, either just before 18-deg twilight in the evening or just after 18-deg twilight in the morning.
+
+i.) Go to the finding chart for the star ("XXYYZZ_guider.ps") and compare it to the guider view.  Figure out where you are.  If the guider field is very sparse, it may help to consult the wide-field finding chart ("XXYYZZ_tot.ps").
+
+ii.) To move the telescope using the guider GUI, click Marker --> Create --> Objdes From and put a marker down.  Then click Marker --> Create --> Objind To and put a marker down.  Click "Move Scope" in the bottom right of the window.  This will slew to put the object/pixel at "From" to "To"
+
+iib.) If you are very far from the desired field you can enter NSEW dithers by clicking on "Offset" at the left of the TCSGUI window.  This will bring up a handpaddle.  Enter the desired step size and click one of the compass buttons.
+
+iii.) In the Fiducial Location Window (where you already uploaded an offset file in step 14d), click on the line for your target object.  This will put the corresponding guider position in the boxes at the top of the window.  Set "Guide Box Follows" to 50, or smaller if necessary to separate your guide star from a nearby object.  Click "Go" and the guiding box should appear in the frame.
+
+iv.) **TURN ON AUTOGUIDING!**  Click "Autoguide" in the Guider Window or the main guider window (next to "Start Imaging").  
+
+v.) Move your guide star (the one selected in your finding chart) into the guiding box.  You can do this as in step ii above, or for a shortcut, press CTRL while right-clicking on the guide star.
+
+vi.) Once the guide star is securely in the guiding box, you can begin exposing.
+     In ICE, type "vp2_subdither"
+     Follow the prompts.  In March our exposure time for a V~11.5 star was 120s.  Set a 5-10s delay time for the guider to settle.
+     The script will execute 6 exposures at overlapping dither positions.  You can watch the guide box coordinates change in the Fiducial Location window.  Mark the guide box coordinates for at least one exposure in the logsheet.
+
+vii.) If this is your first acquisition of the night, then zero the telescope offset to verify the pointing.
+      At the left of the TCSGUI window, click "Zero --> New HA/Dec Constant Zero Points"
+      A warning box will appear.  Click Yes.
+
+ 
+
+
+
+19b.) PROCEDURE for OBSERVING GALAXIES
+
+For the MASSIVE survey, our cadence is  sky,D1,D1,sky,D2,D2,sky,D3,D3,sky.
+Sky exposures are 600s.  Galaxy exposures (D1,D2,D3) are 1200s.
+
+i.) The telescope and VIRUS-P should start out pointing at the sky field.  Go to the finding chart for the sky field ("NGCXXXXsky_guider.ps") and compare it to the guider view.  Figure out where you are.  If the guider field is very sparse, it may help to consult the wide-field finding chart ("NGCXXXXsky_tot.ps").
+
+ii.) To move the telescope using the guider GUI, click Marker --> Create --> Objdes From and put a marker down.  Then click Marker --> Create --> Objind To and put a marker down.  Click "Move Scope" in the bottom right of the window.  This will slew to put the object/pixel at "From" to "To"
+
+iib.) If you are very far from the desired field you can enter NSEW dithers by clicking on "Offset" at the left of the TCSGUI window.  This will bring up a handpaddle.  Enter the desired step size and click one of the compass buttons.
+
+iii.) In the Fiducial Location Window (where you already uploaded an offset file in step 14d), click on the line for your target object.  This will put the corresponding guider position in the boxes at the top of the window.  Set "Guide Box Follows" to 50, or smaller if necessary to separate your guide star from a nearby object.  Click "Go" and the guiding box should appear in the frame.
+
+iv.) **TURN ON AUTOGUIDING!**  Click "Autoguide" in the Guider Window or the main guider window (next to "Start Imaging").  
+
+v.) Move your guide star (the one selected in your sky field finding chart) into the guiding box.  You can do this as in step ii above, or for a shortcut, press CTRL while right-clicking on the guide star.
+
+vi.) Once the guide star is securely in the guiding box, you can begin exposing.
+     In ICE, type "object"  (this is your command for sky and D1 positions)
+     Follow the prompts.
+     Set a timer to alert you when the sky frame begins reading out.
+
+vii.) If this is your first acquisition of the night, then zero the telescope offset to verify the pointing.
+      At the left of the TCSGUI window, click "Zero --> New HA/Dec Constant Zero Points"
+      A warning box will appear.  Click Yes.      
+
+viii.) Near the end of the sky exposure (before/as it starts reading out), go to TCSGUI and select the galaxy (not sky) as your next target.  Don't forget to click "Apply."
+
+ix.) When the sky frame begins reading out, click "Go Next" in TCSGUI.
+
+x.) As the guide field for the galaxy comes up in the guider, select the galaxy (not sky) in the Fiducial Location window and click "Go."  This will change the position of the guide box for your new field.
+
+xi.) Consult your finding chart (galaxy field this time) and put the galaxy guide star in the guide box as in step v.
+
+xii.) Double-check that Autoguide is turned on.
+
+xiii.) Expose 2 x 1200s on the galaxy (D1)
+     In ICE, type "object"  (this is your command for sky and D1 positions)
+     Follow the prompts.
+     Set a timer to alert you when the second galaxy frame begins reading out (~41 minutes).
+
+xiv.) Go back to the sky field (using TCSGUI), acquire the guide star, and do another sky exposure.  Don't forget to change the guide box location back to the sky field value, and to reset your timer for 10 minutes.
+
+xv.) Go back to the galaxy field and acquire the guide star.
+
+xvi.) Do another pair of galaxy exposures, this time at position D2.
+     In ICE, type "vp2_dither"  (this is your command for D2 and D3 positions)
+     Follow the prompts.  Set 2 exposures at each position.  Use a guider delay time of 1s -- initial sloshing around will be negligible in the 20-min exposure.
+     The script will start exposing at position D1.  Type Shift+A to abort.
+     The script will then move to position D2.  Check that the guide box center in the Fiducial Location window has changed.
+     Set a timer to alert you when the second galaxy frame begins reading out (~41 minutes).
+     After giving 2 frames at D2, the script will move to D3.  Again, type Shift+A to abort.
+     Wait for the whole script to end before moving back to sky.  If you move to sky prematurely the offset in the autoguide box will be transfered to your sky guide star coordinates.
+
+xvii.)  Move to sky and do your third sky exposure.
+
+xviii.)  Move back to the galaxy and do your final pair of galaxy exposures with vp2_dither.  This time abort D1 and D2, and expose on D3.
+
+xix.)  Move back to sky and do your final sky exposure.  If you want to be very speedy, you can set up your next target, click "Go Next" at the end of the sky exposure and go out to move the telescope while VIRUS-P is reading out.
+
+
+
+PROTIP: To the extent you can (see step xvi for an exception), move the telescope between science and sky and acquire the respective guide stars while the detector is reading out.  This will save you quite a bit of time over the course of a night.
+
+
+
+
+

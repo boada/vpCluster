@@ -1,0 +1,44 @@
+# Region file format: DS9 version 4.1
+# Filename: image.fits
+global color=green font="helvetica 10 normal" select=1 edit=1 move=1 delete=1 include=1 fixed=0 source
+fk5;circle(328.33894725,0.19186223,0.000833333) # width=2 color="green" text={g=20.6}
+fk5;circle(328.33586188,0.19304171,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(328.3381717,0.19835973,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(328.34050075,0.18344759,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(328.3314515,0.18721282,0.000833333) # width=2 color="green" text={g=21.2}
+fk5;circle(328.33212448,0.18559988,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(328.35071266,0.19832467,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(328.34831509,0.20243937,0.000833333) # width=2 color="green" text={g=21.4}
+fk5;circle(328.35227346,0.19826313,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(328.35223903,0.18310717,0.000833333) # width=2 color="green" text={g=21.3}
+fk5;circle(328.35321203,0.19986756,0.000833333) # width=2 color="green" text={g=21.6}
+fk5;circle(328.3553303,0.18824683,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(328.32243496,0.18623391,0.000833333) # width=2 color="green" text={g=20.5}
+fk5;circle(328.35678282,0.18787442,0.000833333) # width=2 color="green" text={g=20.4}
+fk5;circle(328.33722442,0.17279183,0.000833333) # width=2 color="green" text={g=20.9}
+fk5;circle(328.34258267,0.21106047,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(328.35857851,0.1914648,0.000833333) # width=2 color="green" text={g=21.2}
+fk5;circle(328.35925216,0.1945042,0.000833333) # width=2 color="green" text={g=18.2}
+fk5;circle(328.31990149,0.19986906,0.000833333) # width=2 color="green" text={g=20.6}
+fk5;circle(328.31855718,0.18702371,0.000833333) # width=2 color="green" text={g=21.4}
+fk5;circle(328.36001447,0.1994361,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(328.33002332,0.21286289,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(328.3616901,0.18507561,0.000833333) # width=2 color="green" text={g=20.9}
+fk5;circle(328.36255391,0.18722642,0.000833333) # width=2 color="green" text={g=21.0}
+fk5;circle(328.36090259,0.20345186,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(328.31393884,0.19438513,0.000833333) # width=2 color="green" text={g=21.3}
+fk5;circle(328.36332264,0.19824694,0.000833333) # width=2 color="green" text={g=21.3}
+fk5;circle(328.31648368,0.17540594,0.000833333) # width=2 color="green" text={g=20.9}
+fk5;circle(328.36764723,0.19351262,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(328.36755974,0.19947346,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(328.33243116,0.22218173,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(328.31177105,0.17593367,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(328.34964984,0.2224559,0.000833333) # width=2 color="green" text={g=21.3}
+fk5;circle(328.34485744,0.15976251,0.000833333) # width=2 color="green" text={g=20.8}
+fk5;circle(328.3712854,0.19824447,0.000833333) # width=2 color="green" text={g=21.2}
+fk5;circle(328.36390733,0.21749101,0.000833333) # width=2 color="green" text={g=20.6}
+fk5;circle(328.3753868,0.20313847,0.000833333) # width=2 color="green" text={g=20.4}
+fk5;circle(328.36099418,0.22336333,0.000833333) # width=2 color="green" text={g=21.3}
+fk5;circle(328.37424733,0.17618155,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(328.34280812,0.15294213,0.000833333) # width=2 color="green" text={g=21.0}
+fk5;circle(328.33943969,0.23283664,0.000833333) # width=2 color="green" text={g=21.6}

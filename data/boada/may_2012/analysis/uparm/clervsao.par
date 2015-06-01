@@ -1,0 +1,4 @@
+version,s,h,'RVSAO 2.8.1, May 25, 2012'
+newversion,s,h,'RVSAO 2.8.1, May 25, 2012'
+motd,b,h,yes,,,'type the welcome banner?'
+mode,s,h,'al'

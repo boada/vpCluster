@@ -1,0 +1,23 @@
+# Region file format: DS9 version 4.1
+# Filename: image.fits
+global color=green font="helvetica 10 normal" select=1 edit=1 move=1 delete=1 include=1 fixed=0 source
+fk5;circle(3.71758001,-0.9526666,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(3.72569211,-0.95554051,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(3.71490153,-0.96239053,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(3.72542645,-0.95235738,0.000833333) # width=2 color="green" text={g=20.7}
+fk5;circle(3.72757762,-0.95348102,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(3.7051752,-0.9443296,0.000833333) # width=2 color="green" text={g=20.9}
+fk5;circle(3.73596501,-0.94310703,0.000833333) # width=2 color="green" text={g=20.5}
+fk5;circle(3.70027975,-0.97452679,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(3.73698239,-0.93655994,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(3.74540438,-0.94926156,0.000833333) # width=2 color="green" text={g=19.6}
+fk5;circle(3.70185266,-0.93205293,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(3.74975418,-0.9591069,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(3.74320633,-0.93523794,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(3.68515891,-0.95351405,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(3.75218417,-0.95025776,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(3.74289202,-0.92737426,0.000833333) # width=2 color="green" text={g=21.1}
+fk5;circle(3.73153437,-0.91959976,0.000833333) # width=2 color="green" text={g=20.5}
+fk5;circle(3.75532301,-0.94463228,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(3.75541525,-0.97095359,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(3.7191816,-0.99646379,0.000833333) # width=2 color="green" text={g=22.0}

@@ -1,0 +1,24 @@
+ReadiReandgi Readnbcsi0g0 14n.gf itbscs0b0c1s3
+0.0f1i1t.sfi
+ts
+Reading bcs0012.fits
+Reading bcs0015.fits
+subtracted:
+clipping left 56866 of 57288 values, mean 2015.95 with error 14.1594 of region [1029:1056,2:2047]
+Saving sbcs0014.fits
+cannot open file 'e.bcs0014.fits' for reading No errorfile
+Calculating error ...
+Saving e.sbcs0014.fits
+subtracted:
+clipping left 56861 of 57288 values, mean 2015.79 with error 14.1309 of region [1029:1056,2:2047]
+Saving sbcs0013.fits
+subtracted:
+clipping left 56868 of 57288 values, mean 2015.78 with error 14.1816 of region [1029:1056,2:2047]
+Saving sbcs0012.fits
+cannot open file 'e.bcs0013.fits' for reading No errorfile
+Calculating error ...
+Saving e.sbcs0013.fits
+
+cannot open file 'e.bcs0012.fits' for reading No errorfile
+Calculating error ...
+Saving e.sbcs0012.fits

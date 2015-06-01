@@ -1,0 +1,21 @@
+SELECT TOP 1000
+G.objID,
+G.ra,
+G.dec,
+G.u,
+G.Err_u,
+G.g,
+G.Err_g,
+G.r,
+G.Err_r,
+G.i,
+G.Err_i,
+G.z,
+G.Err_z
+FROM
+Galaxy as G
+JOIN
+dbo.fGetNearbyObjEq(16.230708333333332,0.06009166666666667,3) AS GN
+ON
+G.objID = GN.objID
+Where G.g < 22 AND clean = 1 and (calibStatus_r & 1) != 0

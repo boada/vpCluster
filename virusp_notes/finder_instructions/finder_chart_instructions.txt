@@ -1,0 +1,57 @@
+Log into atlas  
+(computer at the left end of the table with multiple control computers, last I saw)
+
+User:  nmcc
+Passwd:  Ly_1216nmcc
+
+cd finder_code/scripts
+cp IFUcen_vp3.txt IFUcen.txt
+cp astrom_vp.now astrom.now
+
+The finding chart code is interactive.  Given coordinates, it should bring up a sky image with the VP IFU and guider cam overlaid.  You can click and drag the VP position to a different spot if desired (galaxies should be exactly centered, sky positions should have the IFU over a relatively blank piece of sky).  Then press Enter (or whatever on-screen prompt is given) and the program will finish.  At the end you'll have a lot of windows you can close.
+
+Each of the lines below will create a set of finder charts for one field.  These are the positions you want to have ready for the beginning of our run (in addition to the finder charts I attached in my e-mail).  You might be able to run them all as a single script (interrupted each time to interact with the sky image), or enter them one by one.
+
+Run these from /finder_code/scripts/:
+
+./find_gen.csh 01:07:24.90 32:24:45.0 NGC383
+./find_gen.csh 01:07:14.60 32:13:42.7 NGC383sky
+./find_gen.csh 04:35:04.00 73:15:45.0 NGC1573
+./find_gen.csh 04:35:37.33 73:07:11.5 NGC1573sky
+./find_gen.csh 23:15:44.50 -02:22:53.0 NGC7556
+./find_gen.csh 23:15:53.30 -02:30:57.8 NGC7556sky
+./find_gen.csh 09:32:52.90 67:37:03.0 NGC2892
+./find_gen.csh 09:33:28.22 67:28:51.0 NGC2892sky
+./find_gen.csh 21:51:11.02 28:51:50.4 BD28_4211
+
+
+The finder chart images are written to /finder_code/images/ .
+
+For each position, there are three output images, e.g.,
+NGC383_field.ps
+NGC383_guider.ps
+NGC383_tot.ps
+
+and
+NGC383sky_field.ps
+NGC383sky_guider.ps
+NGC383sky_tot.ps
+
+_field.ps  shows where the VIRUS-P fibers fall on the target field (for one subdither position)
+_guider.ps  shows the guider field and the (X,Y) positions of stars on the guider camera
+_tot.ps  is a wide-field view of the IFU and guider fields
+
+
+To successfully observe a galaxy, you'll need to take the _guider.ps finding chart, identify one bright star in the field of view, and enter its (X,Y) positions into a text file, MASSIVE_Dec2014.fiducial .  Circle this object on the finding chart so you can verify it is being auto-guided in the proper location during observations.  If possible, avoid stars near the very edges of the guider field, or stars with nearby companions.
+
+Do the same for the sky positions, just to ensure that the telescope doesn't drift and run background stars over multiple fibers.
+
+
+Save or upload MASSIVE_Dec2014.fiducial somewhere on atlas, so you can retrieve it when you are ready for autoguiding (see step 14d in instructions.txt).
+
+
+
+
+
+
+

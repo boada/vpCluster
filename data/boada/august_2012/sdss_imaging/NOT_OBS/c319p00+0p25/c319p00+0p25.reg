@@ -1,0 +1,26 @@
+# Region file format: DS9 version 4.1
+# Filename: image.fits
+global color=green font="helvetica 10 normal" select=1 edit=1 move=1 delete=1 include=1 fixed=0 source
+fk5;circle(318.9904914,0.25876857,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(319.00974181,0.2469314,0.000833333) # width=2 color="green" text={g=20.1}
+fk5;circle(319.0116714,0.2458288,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(318.9855985,0.26298669,0.000833333) # width=2 color="green" text={g=21.2}
+fk5;circle(319.01537131,0.24740928,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(319.00860176,0.23167422,0.000833333) # width=2 color="green" text={g=21.9}
+fk5;circle(319.02520523,0.2596368,0.000833333) # width=2 color="green" text={g=21.8}
+fk5;circle(318.98513067,0.27727734,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(318.97518876,0.2664421,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(318.97315139,0.24318266,0.000833333) # width=2 color="green" text={g=20.1}
+fk5;circle(319.02235358,0.23277428,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(319.01979899,0.22922911,0.000833333) # width=2 color="green" text={g=20.1}
+fk5;circle(319.02271194,0.2313696,0.000833333) # width=2 color="green" text={g=18.5}
+fk5;circle(318.96686565,0.25170811,0.000833333) # width=2 color="green" text={g=22.0}
+fk5;circle(318.97338215,0.23415497,0.000833333) # width=2 color="green" text={g=21.4}
+fk5;circle(319.02232649,0.28144213,0.000833333) # width=2 color="green" text={g=21.5}
+fk5;circle(318.97742814,0.28195785,0.000833333) # width=2 color="green" text={g=21.7}
+fk5;circle(318.9705009,0.2749515,0.000833333) # width=2 color="green" text={g=21.1}
+fk5;circle(319.02465828,0.28156605,0.000833333) # width=2 color="green" text={g=21.2}
+fk5;circle(318.98741979,0.21837788,0.000833333) # width=2 color="green" text={g=19.6}
+fk5;circle(319.0392447,0.24642626,0.000833333) # width=2 color="green" text={g=18.6}
+fk5;circle(319.0392409,0.24624015,0.000833333) # width=2 color="green" text={g=20.7}
+fk5;circle(318.98780047,0.21586171,0.000833333) # width=2 color="green" text={g=19.9}

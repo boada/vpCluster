@@ -1,0 +1,17 @@
+SELECT TOP 1000
+G.objID,
+G.ra,
+G.dec, 
+Pz.z as Photoz,
+Pz.zErr as Photoz_err
+FROM
+Galaxy as G
+JOIN
+dbo.fGetNearbyObjEq(16.230708333333332,0.06009166666666667,3) AS GN
+ON
+G.objID = GN.objID
+JOIN
+Photoz as Pz
+ON
+G.objID = Pz.objID
+Where G.g < 22

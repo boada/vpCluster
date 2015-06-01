@@ -1,0 +1,20 @@
+SELECT TOP 1000
+G.objID,
+G.ra,
+G.dec, 
+SO.specObjID,
+SO.ra as Spec_ra, 
+SO.dec as Spec_dec,
+SO.z as Specz,
+SO.zErr as Specz_err
+FROM
+Galaxy as G
+JOIN
+dbo.fGetNearbyObjEq(16.230708333333332,0.06009166666666667,3) AS GN
+ON
+G.objID = GN.objID
+JOIN
+SpecObj as SO
+ON
+G.objID = SO.bestObjID
+Where G.g < 22

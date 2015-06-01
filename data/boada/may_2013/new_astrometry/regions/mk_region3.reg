@@ -1,0 +1,11 @@
+ global color=black font="helvetica 10 normal"select=1 highlite=1 edit=1 move=1 delete=1 include=1 fixed=0 source
+ fk5
+# text( 248.34138,  57.39850) text={ -63.3  380.9}
+# text( 248.37998,  57.35913) text={  79.1  109.2}
+# text( 248.38836,  57.39208) text={ 110.9  336.1}
+# text( 248.42446,  57.38392) text={ 244.7  279.6}
+# text( 248.45357,  57.36241) text={ 352.5  131.2}
+# text( 248.45687,  57.33865) text={ 364.5  -32.5}
+# text( 248.49590,  57.40014) text={ 510.0  390.9}
+# text( 248.51027,  57.39455) text={ 563.2  352.4}
+# text( 248.34673,  57.42256) text={ -42.9  546.5}
