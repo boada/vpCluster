@@ -1,4 +1,5 @@
 *.pyc
+*.fits
 *.fit
 *.hdf5
 *.swp
