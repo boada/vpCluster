@@ -1,0 +1,7 @@
+*.pyc
+*.fit
+*.hdf5
+*.swp
+.DS_Store
+*.tar
+*.gz
