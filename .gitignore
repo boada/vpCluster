@@ -6,4 +6,5 @@
 .DS_Store
 *.tar
 *.gz
+*.bz2
 legacy/
