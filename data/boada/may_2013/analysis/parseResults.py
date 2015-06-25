@@ -19,7 +19,7 @@ for f in files:
         z = float(data['Redshift'])
         Q = int(data['Quality'])
         if Q == 0:
-            r.append((field, dither, fiber, z))
+            r.append((field, dither.split('.')[0], fiber, z))
 
 print len(r), 'objects read'
 print r
