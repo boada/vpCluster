@@ -44,7 +44,7 @@
 ;
 ;; Here you can add any of the *-marked entries of the instrument-parameter file you use.
 ;
-gratingsfile_dm /Users/steven/Projects/cluster/data/boada/virus_gratings.dat ;; * A file with VIRUS-P grating IDs
+gratingsfile_dm /Users/steven/Projects/vpcluster/data/boada/virus_gratings.dat ;; * A file with VIRUS-P grating IDs
 DETECTOR 2
 ;
 ;
