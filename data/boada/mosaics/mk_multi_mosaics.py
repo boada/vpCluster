@@ -1,10 +1,14 @@
 import aplpy
 f1 = figure(1).axes[0]
 gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', north=True, subplot=(2,2,2))
-gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1) north=True, subplot=(2,2,2))
-gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1), north=True, subplot=(2,2,2))
-gc3 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1), north=True, subplot=(2,2,3))
-gc4 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1), north=True, subplot=(2,2,4))
+gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
+        north=True, subplot=(2,2,2))
+gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
+        north=True, subplot=(2,2,2))
+gc3 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
+        north=True, subplot=(2,2,3))
+gc4 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
+        north=True, subplot=(2,2,4))
 gc2.show_grayscale(stretch='arcsinh')
 gc3.show_grayscale(stretch='arcsinh')
 gc4.show_grayscale(stretch='arcsinh')
