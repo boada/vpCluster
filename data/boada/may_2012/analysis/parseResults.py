@@ -1,6 +1,5 @@
-import pylab as pyl
 import glob
-from numpy import genfromtxt
+from numpy import genfromtxt, asarray, savetxt
 
 files = glob.glob('*_results/*.results')
 
@@ -13,17 +12,24 @@ for f in files:
         for fiber, z, Q in zip(data['Fiber'], data['Redshift'],
                 data['Quality']):
             if Q == 0:
-                r.append((field, dither.split('.')[0], fiber, z))
+                r.append((cluster, field, dither.split('.')[0], fiber, z))
     except TypeError:
         fiber = int(data['Fiber'])
         z = float(data['Redshift'])
         Q = int(data['Quality'])
         if Q == 0:
-            r.append((field, dither.split('.')[0], fiber, z))
+            r.append((cluster, field, dither.split('.')[0], fiber, z))
 
 print len(r), 'objects read'
-print r
+#print r
 
-print len(r)
+r = asarray(r)
+#data = zeros((r.shape[0],), dtype=[('cluster', 'a13'), ('field', 'a2'), ('dither',
+#    '>i4'), ('fiber', '>i4'), ('redshift', '>f4')])
+#data['cluster'] = r[:,0]
+#data['field'] = r[:,1]
+#data['dither'] = r[:,2]
+#data['fiber'] = r[:,3]
+#data['redshift'] = r[:,4]
 
-
+savetxt('results_may12', r, delimiter=' ', fmt='%s')
