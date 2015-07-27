@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-cluster = 'c203p83+41p0'
+cluster = 'c319p70+0p56'
 
 results = ['results_may12', 'results_august12', 'results_may13']
 
@@ -25,7 +25,11 @@ for result in results:
 merged = pd.merge(cat, redshifts, left_on=['tile', 'dither', 'fiber'],
         right_on=['tile','dither','fiber'], how='outer')
 
-del merged['index']
+try:
+    del merged['index']
+except KeyError:
+    #delete the first column
+    del merged['Unnamed: 0']
 
-merged.to_csv(cluster+'redshifts.csv', index=False)
+merged.to_csv(cluster+'_redshifts.csv', index=False)
 
