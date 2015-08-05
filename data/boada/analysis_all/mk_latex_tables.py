@@ -27,7 +27,7 @@ def main(cluster):
     # now we are going to round some of the columns to the right length
     df_part[['r']] = df_part[['r']].apply(round, args=(2,))
     df_part[['redshift']] = df_part[['redshift']].apply(round, args=(4,))
-    df_part[['seperation']] = df_part[['separation']].apply(round, args=(2,))
+    df_part[['separation']] = df_part[['separation']].apply(round, args=(2,))
 
     # now we have to convert the ra/dec to sexigesimal
     df_part[['ra']] = [hms(ra) for ra in df_part[['ra']].values.ravel()]
