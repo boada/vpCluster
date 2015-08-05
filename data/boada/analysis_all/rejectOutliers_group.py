@@ -160,12 +160,12 @@ if __name__ == "__main__":
                 separated['interloper'] = 'NO'
                 members = separated.interloper.value_counts().NO
                 avgz = findClusterCenterRedshift(separated)
-                print avgz
                 losv = findLOSV(separated, avgz)
 
             rejectInterlopers(losv)
             cleaned = losv
 
+            print avgz
             if members == cleaned.interloper.value_counts().NO:
                 break
             else:
@@ -196,7 +196,7 @@ if __name__ == "__main__":
                 ast.gapperEstimator(cleaned.LOSV[cleaned.interloper == 'NO'])
                 print LOSVD
 
-
+            print avgz
             if members == cleaned.interloper.value_counts().NO:
                 break
             else:
