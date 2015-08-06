@@ -8,3 +8,5 @@
 *.gz
 *.bz2
 legacy/
+/*/spec1d_IRAF/
+/*/pyraf/
