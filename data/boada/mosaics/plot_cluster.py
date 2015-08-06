@@ -14,7 +14,7 @@ def main(cluster):
     gc.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
     #gc.set_tick_labels_size('small')
 
-    data = pyl.genfromtxt('./../analysis_all/' +\
+    data = pyl.genfromtxt('./../analysis_all/redshifts/' +\
             cluster.split('_')[0]+'_redshifts.csv', delimiter=',', names=True,
             dtype=None)
 

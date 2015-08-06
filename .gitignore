@@ -7,7 +7,7 @@
 *.tar
 *.gz
 *.bz2
-*.png
+**.png
 legacy/
 /*/spec1d_IRAF/
 /*/pyraf/
