@@ -160,7 +160,7 @@ if __name__ == "__main__":
                 separated['interloper'] = 'NO'
                 members = separated.interloper.value_counts().NO
                 #avgz = findClusterCenterRedshift(separated)
-                avgz = 0.2265
+                avgz = 0.2256
                 losv = findLOSV(separated, avgz)
 
             rejectInterlopers(losv)
