@@ -9,5 +9,5 @@
 *.bz2
 **.png
 legacy/
-/*/spec1d_IRAF/
-/*/pyraf/
+**spec1d_IRAF/
+**pyraf/
