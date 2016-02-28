@@ -156,6 +156,7 @@ if __name__ == "__main__":
                 avgz = findClusterCenterRedshift(cleaned)
                 losv = findLOSV(cleaned, avgz)
                 losv['interloper'] = 'NO'
+                losv = findseparationSpatial(losv, (RAcenter, DECcenter))
             except NameError:
                 separated['interloper'] = 'NO'
                 members = separated.interloper.value_counts().NO
@@ -172,6 +173,11 @@ if __name__ == "__main__":
             else:
                 members = cleaned.interloper.value_counts().NO
 
+            mems = cleaned[cleaned.interloper == 'NO']
+            #Mr = [aca.absMag(r, z) for r, z in zip(mems.r, mems.redshift)]
+
+            RAcenter = np.average(mems.ra, weights=1./np.array(mems.r))
+            DECcenter = np.average(mems.dec, weights=1./np.array(mems.r))
     else:
         while True:
             try:
@@ -203,6 +209,14 @@ if __name__ == "__main__":
             else:
                 members = cleaned.interloper.value_counts().NO
 
+    mems = cleaned[cleaned.interloper == 'NO']
+    #Mr = [aca.absMag(r, z) for r, z in zip(mems.r, mems.redshift)]
+
+    RAcenter = np.average(mems.ra, weights=1./np.array(mems.r))
+    DECcenter = np.average(mems.dec, weights=1./np.array(mems.r))
+
+    print center, RAcenter, DECcenter
 
 
-    cleaned.to_csv(sys.argv[1]+'_members.csv', index=False)
+
+    #cleaned.to_csv(sys.argv[1]+'_members.csv', index=False)

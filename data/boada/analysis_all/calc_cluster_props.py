@@ -67,15 +67,15 @@ def calc_mass_Evrard(data, A1D=1177., alpha=0.364):
     if avgz == None:
         pass
     else:
-        #return 1e15/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
-        return 1/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
+        return 1e15/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
+        #return 1/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         clusters = glob('./members/*_members.csv')
         #clusters = [c.rstrip('_members.csv') for c in clusters]
 
-        alpha = 0.05 # 95% CI.
+        alpha = 0.32 # 95% CI.
         resamples = 500
         with open('cluster_props', 'w') as f:
             f.write('#name mass mass_lower mass_upper\n')
