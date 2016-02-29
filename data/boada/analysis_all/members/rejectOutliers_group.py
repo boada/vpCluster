@@ -132,6 +132,14 @@ def rejectInterlopers_group(data, avgz, sigmav=500):
     return data
 
 if __name__ == "__main__":
+    ''' This script does the interlop rejection of the redshift catalogs.
+    Currently, it uses my own version of the shiffting gapper method, but I
+    might try adding a few other's implimentations of it to see how things
+    might change. This creates new files with the membership information for
+    use in the science and for making the tables with membership.
+
+    '''
+
     catalog = './../redshifts/'+sys.argv[1]+'_redshifts.csv'
     # get the center
     with open('./../centers/'+sys.argv[1]+'_center.list', 'r') as f:

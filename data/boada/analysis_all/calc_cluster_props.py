@@ -71,6 +71,14 @@ def calc_mass_Evrard(data, A1D=1177., alpha=0.364):
         #return 1/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
 
 if __name__ == "__main__":
+    ''' This takes the membership information from the member catalogs and
+    computes the LOSVD and cluster mass from the member galaxies. Right now it
+    is using a simple power law to do this, but things will change in the
+    future when I add the stuff from the des study.
+
+    '''
+
+
     if len(sys.argv) == 1:
         clusters = glob('./members/*_members.csv')
         #clusters = [c.rstrip('_members.csv') for c in clusters]

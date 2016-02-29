@@ -3,6 +3,12 @@ import pandas as pd
 import sys
 
 def main(cluster):
+    ''' This script matches the redshift measurements to the complete SDSS
+    catalogs and spits out a new file that we can then use to start doing
+    science with.
+
+    '''
+
     results = ['results_may12', 'results_august12', 'results_may13']
     cat = pd.read_csv('./../catalogs/'+cluster+'_complete.csv')
 

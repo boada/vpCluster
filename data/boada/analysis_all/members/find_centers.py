@@ -132,6 +132,16 @@ def rejectInterlopers_group(data, avgz, sigmav=500):
     return data
 
 if __name__ == "__main__":
+    ''' I don't really remember what this script is supposed to do but it looks
+    like it it has something to do with the miscentering problem that we were
+    trying to look at originally. If I had a guess it computes the center of
+    the cluster based on the member galaxies and them compares it to the center
+    that we have given in the centers list.
+
+    This script isn't to be used for anything at the momement.
+
+    '''
+
     catalog = './../redshifts/'+sys.argv[1]+'_redshifts.csv'
     # get the center
     with open('./../centers/'+sys.argv[1]+'_center.list', 'r') as f:
