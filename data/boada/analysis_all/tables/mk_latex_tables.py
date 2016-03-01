@@ -34,7 +34,7 @@ def main(cluster):
     df_part[['dec']] = [dms(dec) for dec in df_part[['dec']].values.ravel()]
 
     # replace the interloper with checkmarks
-    df_part.interloper[df_part.interloper == 'NO'] = r'surd'
+    df_part.interloper[df_part.interloper == 'NO'] = r'\surd'
     df_part.interloper[df_part.interloper == 'YES'] = r'...'
 
 
