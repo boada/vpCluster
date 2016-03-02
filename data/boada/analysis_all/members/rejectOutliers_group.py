@@ -11,7 +11,6 @@ aca.H0 = 70
 aca.OMEGA_M0 = 0.286
 aca.OMEGA_L0 = 0.714
 
-c = 2.99E5 # speed of light in km/s
 
 def findClusterCenterRedshift(data):
     ''' Finds the center of the cluster in redshift space using the
@@ -31,13 +30,12 @@ def findseparationSpatial(data, center):
     '''
 
     # Add a new column to the dataframe
-    data.loc[:, 'separation'] = 0.0
-    for row in data.iterrows():
-        sepDeg = aco.calcAngSepDeg(center[0], center[1], row[1]['ra'],
-                row[1]['dec'])
-        sepMpc = sepDeg * aca.da(row[1]['redshift'])/57.2957795131
-        data.loc[row[0], 'separation'] = sepMpc
-        #data['separation'][row[0]] = sepDeg * 3600
+    sepDeg = np.array(aco.calcAngSepDeg(center[0], center[1], data.ra.values,
+            data.dec.values))
+    da = np.array([aca.da(z)/57.2957795131 for z in data.redshift.values])
+
+    sepMpc = da * sepDeg
+    data.loc[:, 'separation'] = sepMpc
 
     return data
 
@@ -48,12 +46,12 @@ def findLOSV(data, avgz):
 
     c = 2.99E5 # speed of light in km/s
 
+    LOSV = c * (data.redshift.values - avgz)/ (1+avgz)
+    LOSV_err = c/(1+avgz) * data.redshift_err.values * 2
+
     # Add a new column to the dataframe
-    data.loc[:, 'LOSV'] = 0.0
-    data.loc[:, 'LOSV_err'] = 0.0
-    for row in data.iterrows():
-        data.loc[row[0], 'LOSV'] = c *(row[1]['redshift'] - avgz)/(1 + avgz)
-        data.loc[row[0], 'LOSV_err'] = c/(1 + avgz) * row[1]['redshift_err'] * 2
+    data.loc[:, 'LOSV'] = LOSV
+    data.loc[:, 'LOSV_err'] = LOSV_err
 
     return data
 
@@ -186,16 +184,19 @@ def shifty_gapper(r, z, zc, vlimit=10000, ngap=30, glimit=1000):
 
 def rejectInterlopers_group(data, avgz, sigmav=500):
 
+    c = 2.99E5 # speed of light in km/s
     deltaZmax = 2 * sigmav * (1.+avgz) / c
     deltaRmax = (c * deltaZmax)/(9.5*aca.H0*aca.Ez(avgz)) # Mpc
     #deltaThetamax = 206265 * deltaRmax * aca.da(avgz) #arcseconds
 
     # make redshift cut
-    data.interloper[abs(data.redshift - avgz) >= deltaZmax] = 'YES'
+    data.loc[abs(data.redshift - avgz) >= deltaZmax, 'interloper'] = 'YES'
+    #data.interloper[abs(data.redshift - avgz) >= deltaZmax] = 'YES'
     #data = data[abs(data.redshift - avgz) <= deltaZmax]
 
     # make spatial cut
-    data.interloper[data.separation >=deltaRmax] = 'YES'
+    data.loc[data.separation >=deltaRmax, 'interloper'] = 'YES'
+    #data.interloper[data.separation >=deltaRmax] = 'YES'
     #data = data[data.separation <= deltaRmax]
 
     return data
@@ -227,6 +228,7 @@ if __name__ == "__main__":
             line = f.read()
         line = line.split(' ')
         center = float(line[0]), float(line[1])
+        avgz = float(line[2])
 
         results = pd.read_csv(catalog)
         # mask out the missing values
@@ -249,7 +251,7 @@ if __name__ == "__main__":
                     separated.loc[:, 'interloper'] = 'NO'
                     members = separated.interloper.value_counts().NO
                     #avgz = findClusterCenterRedshift(separated)
-                    avgz = 0.2256
+                    #avgz = 0.2256
                     losv = findLOSV(separated, avgz)
 
                 mask = shifty_gapper(losv.separation.values,
