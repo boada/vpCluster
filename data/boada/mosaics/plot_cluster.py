@@ -37,5 +37,10 @@ def main(cluster):
     x = (~pyl.isnan(data['fiber'])) & (~pyl.isnan(data['redshift']))
     gc.show_markers(data['ra'][x], data['dec'][x], edgecolor='#188487',
             facecolor='none', marker='o', s=150)
+
+    pyl.tight_layout()
+    pyl.show()
+    pyl.savefig(cluster.split('_')[0]+'_mosaic', bbox='tight')
+
 if __name__ == "__main__":
     main(sys.argv[1])
