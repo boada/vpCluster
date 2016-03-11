@@ -11,8 +11,8 @@ for f in files:
     try:
         for fiber, z, Q, z_err in zip(data['Fiber'], data['Redshift'],
                 data['Quality'], data['RedshiftError']):
-            if Q == 0 or Q == 1:
-                r.append((cluster, field, dither.split('.')[0], fiber, Q, z,
+            #if Q == 0 or Q == 1:
+            r.append((cluster, field, dither.split('.')[0], fiber, Q, z,
                     z_err))
     except TypeError:
         fiber = int(data['Fiber'])
