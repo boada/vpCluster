@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pandas as pd
 from glob import glob
 import numpy as np
@@ -43,7 +44,7 @@ for i in colors:
 X = features.values
 y = result.Q.values
 X_train, X_test, y_train, y_test = train_test_split(X,y,
-        test_size=0.5)
+        test_size=0.3)
 
 # Set the parameters by cross-validation
 param_grid = [{'kernel': ['rbf'],
@@ -59,7 +60,7 @@ for score in scores:
     print()
 
     clf = GridSearchCV(SVC(), param_grid=param_grid, cv=5,
-                       scoring='%s_weighted' % score)
+                       scoring='%s_weighted' % score, n_jobs=-1)
     clf.fit(X_train, y_train)
 
     print("Best parameters set found on development set:")
@@ -124,11 +125,11 @@ for score in scores:
     print(clf.best_params_)
     print()
     print("Grid scores on development set:")
+    # print()
+    # for params, mean_score, scores in clf.grid_scores_:
+    #     print("%0.3f (+/-%0.03f) for %r"
+    #          % (mean_score, scores.std() * 2, params))
     print()
-    #for params, mean_score, scores in clf.grid_scores_:
-        #print("%0.3f (+/-%0.03f) for %r"
-        #      % (mean_score, scores.std() * 2, params))
-    #print()
 
     print("Detailed classification report:")
     print()
