@@ -30,12 +30,12 @@ features = pd.DataFrame()
 features = result[['u','g','r', 'i', 'z']]
 
 # colors
-colors = combinations('zirgu', 2)
+colors = combinations('ugriz', 2)
 for i in colors:
     features['%s-%s' % (i[0], i[1])] = result.loc[:,i[0]] - result.loc[:,i[1]]
 
 # colors squared
-colors = combinations('zirgu', 2)
+colors = combinations('ugriz', 2)
 for i in colors:
     features['(%s-%s)2' % (i[0], i[1])] = (result.loc[:,i[0]] -
             result.loc[:,i[1]])**2
@@ -44,7 +44,7 @@ for i in colors:
 X = features.values
 y = result.Q.values
 X_train, X_test, y_train, y_test = train_test_split(X,y,
-        test_size=0.3)
+        test_size=0.5)
 
 # Set the parameters by cross-validation
 param_grid = [{'kernel': ['rbf'],
