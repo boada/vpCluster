@@ -44,8 +44,9 @@ for i in colors:
 # make datasets
 X = features.values
 y = result.Q.values
-scaler = preprocessing.StandardScaler().fit(X)
-X = scaler.transform(X)
+# scaler = preprocessing.StandardScaler().fit(X)
+# X = scaler.transform(X)
+X = preprocessing.scale(X)
 X_train, X_test, y_train, y_test = train_test_split(X,y,
         test_size=0.30)
 
@@ -58,12 +59,10 @@ param_grid = {"max_depth": [3, None],
               "bootstrap": [True, False],
               "criterion": ["gini", "entropy"],
               "n_estimators": sp_randint(5, 100)}
-
-scores = ['precision', 'recall']
-
-for score in scores:
-    print("# Tuning hyper-parameters for %s" % score)
-    print()
+best_score = 0.0
+for i in range(2):
+    # print("# Tuning hyper-parameters for %s" % score)
+    # print()
 
     # clf = GridSearchCV(RandomForestClassifier(),
     #    param_grid=param_grid,
@@ -73,24 +72,16 @@ for score in scores:
     n_iter_search = 50
     clf = RandomizedSearchCV(RandomForestClassifier(),
             param_distributions=param_grid,
-            n_iter=n_iter_search, cv=5, scoring='accuracy',
+            n_iter=n_iter_search, cv=3, scoring='accuracy',
             n_jobs=-1)
 
     clf.fit(X_train, y_train)
     
     print("Best parameters set found on development set:")
-    print()
     print(clf.best_params_)
     print()
-    # print("Grid scores on development set:")
-    # print()
-    # for params, mean_score, scores in clf.grid_scores_:
-    #     print("%0.3f (+/-%0.03f) for %r"
-    #          % (mean_score, scores.std() * 2, params))
+    #print("Detailed classification report:")
     #print()
-
-    print("Detailed classification report:")
-    print()
     print("The model is trained on the full development set.")
     print("The scores are computed on the full evaluation set.")
     print()
@@ -99,8 +90,17 @@ for score in scores:
     print()
     print(confusion_matrix(y_true, y_pred))
 
-# now train on all of the data
-clf.fit(X,y)
+    print(best_score ,clf.best_score_)
+    if i == 1:
+        break
+    else:
+        best_score = clf.best_score_
+        # remove some features
+        rfecv = RFECV(estimator=clf.best_estimator_, step=1, cv=2, scoring='accuracy')
+        rfecv.fit(X_train, y_train)
+        print("Optimal number of features : %d" % rfecv.n_features_)
+        X_train = rfecv.transform(X_train)
+        X_test = rfecv.transform(X_test)
 
 for j in range(5):
     print(j)
@@ -118,30 +118,31 @@ for j in range(5):
     print(mask.size)
     # create a data array for everything to fit into
     #features = -np.ones((mask.size, 25))
-    features = -np.ones((mask.size, 25))
+    data = -np.ones((mask.size, 25))
 
     # mags
     for i, m in enumerate('ugriz'):
-        features[:,i] = magDict[m][mask]
+        data[:,i] = magDict[m][mask]
     
     # colors
     colors = combinations('ugriz', 2)
     for i, c in enumerate(colors):
-        features[:,i+5] = magDict[c[0]][mask] - magDict[c[1]][mask]
+        data[:,i+5] = magDict[c[0]][mask] - magDict[c[1]][mask]
         # colors squared
-        features[:,i+15] = (magDict[c[0]][mask] - magDict[c[1]][mask])**2
+        data[:,i+15] = (magDict[c[0]][mask] - magDict[c[1]][mask])**2
 
     
-    features = scaler.transform(features)
-    features = rfecv.transform(features)
+    # data = scaler.transform(data)
+    data = preprocessing.scale(data)
+    data = rfecv.transform(data)
     # now we make the predictions based on the new features we've created
-    Qs = clf.predict(features)
+    Qs = clf.predict(data)
 
     print(np.where(Qs == 0)[0].size/float(Qs.size))
     print(np.where(Qs == 1)[0].size/float(Qs.size))
     print(np.where(Qs == 2)[0].size/float(Qs.size))
         
-    # with hdf.File('../truth/truth'+str(j).zfill(2)+'_Oii.hdf5', 'a') as f:
+    # with hdf.File('./truth/truth'+str(j).zfill(2)+'_Oii.hdf5', 'a') as f:
     #     values = -np.ones(magDict['u'].size)
     #     values[mask] = Qs
     #     f['Q'] = values
