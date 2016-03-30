@@ -96,7 +96,8 @@ for i in range(2):
     else:
         best_score = clf.best_score_
         # remove some features
-        rfecv = RFECV(estimator=clf.best_estimator_, step=1, cv=2, scoring='accuracy')
+        rfecv = RFECV(estimator=clf.best_estimator_, step=1, cv=2,
+                scoring='accuracy')
         rfecv.fit(X_train, y_train)
         print("Optimal number of features : %d" % rfecv.n_features_)
         X_train = rfecv.transform(X_train)
