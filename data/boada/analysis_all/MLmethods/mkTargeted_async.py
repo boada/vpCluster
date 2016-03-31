@@ -87,21 +87,25 @@ if __name__ == "__main__":
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
+            # millenium cosmology
+            #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
             results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
         elif keepBad:
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
+            # millenium cosmology
+            #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
             results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
 
     async_worker.wait()
 
     try:
         #os.remove('result_targetedPerfect.hdf5')
-        os.remove('result_targetedRealistic.hdf5')
+        os.remove('buzzard_targetedRealistic.hdf5')
     except OSError:
         pass
     #with hdf.File('result_targetedPerfect.hdf5', 'w') as f:
     #    f['result_targetedPerfect'] = results
-    with hdf.File('result_targetedRealistic.hdf5', 'w') as f:
-        f['result_targetedRealistic'] = results
+    with hdf.File('buzzard_targetedRealistic.hdf5', 'w') as f:
+        f['buzzard_targetedRealistic'] = results
