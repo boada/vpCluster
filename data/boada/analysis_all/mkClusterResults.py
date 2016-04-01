@@ -4,6 +4,7 @@ import numpy as np
 from astLib import astStats as ast
 from astLib import astCalc as aca
 from sklearn import mixture
+import h5py as hdf
 import emcee
 import sys
 
@@ -11,6 +12,12 @@ import sys
 aca.H0 = 70
 aca.OMEGA_M0 = 0.286
 aca.OMEGA_L0 = 0.714
+
+# millennium cosmology
+#aca.H0 = 73
+#aca.OMEGA_M0 = 0.25
+#aca.OMEGA_L0 = 0.75
+
 
 def findClusterCenterRedshift(data, errors=False):
     ''' Finds the center of the cluster in redshift space using the
@@ -70,15 +77,15 @@ def calc_mass_Evrard(data, A1D=1177., alpha=0.364):
 
     avgz = findClusterCenterRedshift(data)
     vd = data.LOSVD.values[0]
-    #vd = calcLOSVD(data)
 
     if avgz == None:
         pass
     else:
         return 1e15/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
-        #return 1/(aca.H0 * aca.Ez(avgz)/100.) * (vd/A1D)**(1/alpha)
 
 def findLOSVDgmm(data):
+    ''' Finds the LOSVD using a gaussian mixture model. Not currently used. '''
+
     LOSV = data['LOSV'][:,np.newaxis]
     lowest_bic = np.infty
     bic = []
@@ -179,7 +186,7 @@ def findLOSVDmcmc(data):
 
     #return data, samples
 
-    return sigma_rec
+    return sigma_rec, samples
 
 
 if __name__ == "__main__":
@@ -190,52 +197,80 @@ if __name__ == "__main__":
 
     '''
 
-
     if len(sys.argv) == 1:
+        # make results container
+        results = np.zeros((10,), dtype=[('ID', 'a', 25),
+            ('SOURCES', '>i4'),
+            ('Q0', '>i4'),
+            ('Q1', '>i4'),
+            ('MEMBERS', '>i4'),
+            ('Zc', '>f4'),
+            ('Zc_err', '>f4', (2,)),
+            ('LOSVD', '>f4'),
+            ('LOSVD_err', '>f4', (2,)),
+            ('LOSVD_dist', '>f4', (10000,)),
+            ('MASS', '>f4'),
+            ('MASS_err', '>f4', (2,))])
+
         clusters = glob('./members/*_members.csv')
-        #clusters = [c.rstrip('_members.csv') for c in clusters]
-        with open('cluster_props', 'w') as f:
-            f.write('#name mass mass_lower mass_upper\n')
-            for c in clusters:
-                data = pd.read_csv(c)
-                data = data[data.interloper=='NO']
+        results['ID'] = [c.rstrip('_members.csv').split('/')[-1] for c in
+                clusters]
+        for i, c in enumerate(clusters):
+            data = pd.read_csv(c)
+            results['Q0'][i] = data[data.Q ==0].shape[0]
+            results['Q1'][i] = data[data.Q ==1].shape[0]
 
-                # calculate the LOSVD with the mcmc, without error to start
-                data['LOSVD'] = findLOSVDmcmc(data)[0]
+            # filter out the non-members
+            data = data[data.interloper=='NO']
+            results['MEMBERS'][i] = data.shape[0]
 
-                print data.LOSVD.values[0]
+            # find redshift
+            clusz = findClusterCenterRedshift(data, errors=True)
+            results['Zc'][i] = clusz[0]
+            try:
+                results['Zc_err'][i][0] = clusz[0] - clusz[1][0]
+            except TypeError:
+                results['Zc_err'][i][0] = np.nan
+            results['Zc_err'][i][1] = clusz[1][1] - clusz[0]
 
-                mass = calc_mass_Evrard(data)
-                c = c.rstrip('_members.csv')
+            # calculate the LOSVD with the mcmc, without error to start
+            LOSVD, LOSVD_dist = findLOSVDmcmc(data)
+            results['LOSVD'][i] = LOSVD[0]
+            results['LOSVD_err'][i] = LOSVD[1], LOSVD[2]
+            results['LOSVD_dist'][i] = LOSVD_dist[:,0] # only LOSVD column
 
-                # filler
-                limits = [0,0]
+            # calculate the mass
+            data['LOSVD'] = LOSVD[0]
+            results['MASS'][i] = calc_mass_Evrard(data)
 
-                try:
-                    print c, mass, limits[0], limits[1]
-                except TypeError:
-                    print c, mass/1e15, '---', limits[1]/1e15
+            # bootstrap error on the mass
+            alpha = 0.32 # 95% CI.
+            resamples = 500
+            mass = calc_mass_Evrard(data)
 
-                f.write(c.split('/')[-1]+' '+str(mass)+' '+str(limits[0])+\
-                    ' '+str(limits[1])+'\n')
-
-
-
-        # alpha = 0.32 # 95% CI.
-        # resamples = 500
-        #         mass = calc_mass_Evrard(data)
-        #
-        #         # this reasamples the dataframe to bootstrap the error on the
-        #         # mass
-        #         idx = np.random.random_integers(0, len(data)-1,
-        #                 size=(resamples, len(data)-1))
-        #         mass_ci = np.sort([calc_mass_Evrard(data.iloc[row]) for row in
-        #             idx])
-        #         limits = (mass_ci[int((alpha/2.0) * resamples)],
-        #                 mass_ci[int((1-alpha/2.0) * resamples)])
-        #
+            # this reasamples the dataframe to bootstrap the error on the
+            # mass
+            idx = np.random.random_integers(0, len(data)-1,
+                size=(resamples, len(data)-1))
+            mass_ci = np.sort([calc_mass_Evrard(data.iloc[row]) for row in
+                    idx])
+            limits = (mass_ci[int((alpha/2.0) * resamples)],
+                    mass_ci[int((1-alpha/2.0) * resamples)])
+            try:
+                results['MASS_err'][i][0] = mass - limits[0]
+            except TypeError:
+                results['MASS_err'][i][0] = np.nan
+            results['MASS_err'][i][1] = limits[1] - mass
 
 
+            try:
+                print c, mass, limits[0], limits[1]
+            except TypeError:
+                print c, mass/1e15, '---', limits[1]/1e15
+
+        with hdf.File('results_cluster.hdf5', 'w') as f:
+            f['cluster props'] = results
+            f.flush()
 
     elif len(sys.argv) == 2:
         cluster = './members/'+sys.argv[1]+'_members.csv'
