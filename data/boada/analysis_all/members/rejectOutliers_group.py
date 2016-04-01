@@ -231,8 +231,9 @@ if __name__ == "__main__":
         avgz = float(line[2])
 
         results = pd.read_csv(catalog)
-        # mask out the missing values
-        mask = ~np.isnan(results['redshift'])
+
+        # mask out the bad redshifts
+        mask = (results.Q != 2)
         results = results[mask]
 
         # now we start the process
@@ -297,5 +298,5 @@ if __name__ == "__main__":
                 else:
                     members = cleaned.interloper.value_counts().NO
 
-        cleaned.to_csv(c+'_members.csv', index=False)
+#        cleaned.to_csv(c+'_members.csv', index=False)
         del cleaned
