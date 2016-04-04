@@ -68,7 +68,7 @@ for i in range(2):
     #    param_grid=param_grid,
     #    cv=5, scoring='%s_weighted' % score, n_jobs=-1)
 
-    # perform a randomized grid search for the best possible 
+    # perform a randomized grid search for the best possible
     n_iter_search = 50
     clf = RandomizedSearchCV(RandomForestClassifier(),
             param_distributions=param_grid,
@@ -76,7 +76,7 @@ for i in range(2):
             n_jobs=-1)
 
     clf.fit(X_train, y_train)
-    
+
     print("Best parameters set found on development set:")
     print(clf.best_params_)
     print()
@@ -124,7 +124,7 @@ for j in range(5):
     # mags
     for i, m in enumerate('ugriz'):
         data[:,i] = magDict[m][mask]
-    
+
     # colors
     colors = combinations('ugriz', 2)
     for i, c in enumerate(colors):
@@ -132,7 +132,7 @@ for j in range(5):
         # colors squared
         data[:,i+15] = (magDict[c[0]][mask] - magDict[c[1]][mask])**2
 
-    
+
     # data = scaler.transform(data)
     data = preprocessing.scale(data)
     data = rfecv.transform(data)
@@ -142,7 +142,7 @@ for j in range(5):
     print(np.where(Qs == 0)[0].size/float(Qs.size))
     print(np.where(Qs == 1)[0].size/float(Qs.size))
     print(np.where(Qs == 2)[0].size/float(Qs.size))
-        
+
     # with hdf.File('./truth/truth'+str(j).zfill(2)+'_Oii.hdf5', 'a') as f:
     #     values = -np.ones(magDict['u'].size)
     #     values[mask] = Qs
