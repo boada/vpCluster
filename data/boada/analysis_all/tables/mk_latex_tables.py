@@ -17,8 +17,9 @@ def dms(dec):
 
 def main(cluster):
     df = pd.read_csv('./../members/'+cluster+'_members.csv')
-    df_part = df[['tile', 'dither', 'fiber', 'ra', 'dec', 'r', 'redshift',
-        'Q', 'interloper', 'separation']]
+    df_part = df[['tile', 'dither', 'fiber', 'ra', 'dec', 'r',
+    'redshift','redshift_err', 'Q', 'interloper', 'separation', 'LOSV',
+    'LOSV_err']]
 
     # remove the un-observed galaxies
     x = ~isnan(df_part['redshift'])
@@ -34,7 +35,7 @@ def main(cluster):
     df_part[['dec']] = [dms(dec) for dec in df_part[['dec']].values.ravel()]
 
     # replace the interloper with checkmarks
-    df_part.interloper[df_part.interloper == 'NO'] = r'\checkmark'
+    df_part.interloper[df_part.interloper == 'NO'] = r'$\checkmark$'
     df_part.interloper[df_part.interloper == 'YES'] = r'...'
 
 
