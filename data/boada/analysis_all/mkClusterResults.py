@@ -36,7 +36,7 @@ def findClusterCenterRedshift(data, errors=False):
 
     #print len(x)
     if errors:
-        ci = ast.bootstrap(x, ast.biweightLocation, tuningConstant=6.0)
+        ci = ast.bootstrap(x, np.average, weights=1./w)
         return avgz, ci
     else:
         return avgz
@@ -205,12 +205,12 @@ if __name__ == "__main__":
             ('Q1', '>i4'),
             ('MEMBERS', '>i4'),
             ('Zc', '>f4'),
-            ('Zc_err', '>f4', (2,)),
+            ('Zc_err', '>f4'),
             ('LOSVD', '>f4'),
-            ('LOSVD_err', '>f4', (2,)),
+            ('LOSVD_err', '>f4'),
             ('LOSVD_dist', '>f4', (10000,)),
             ('MASS', '>f4'),
-            ('MASS_err', '>f4', (2,))])
+            ('MASS_err', '>f4')])
 
         clusters = glob('./members/*_members.csv')
         results['ID'] = [c.rstrip('_members.csv').split('/')[-1] for c in
@@ -227,46 +227,54 @@ if __name__ == "__main__":
             # find redshift
             clusz = findClusterCenterRedshift(data, errors=True)
             results['Zc'][i] = clusz[0]
-            try:
-                results['Zc_err'][i][0] = clusz[0] - clusz[1][0]
-            except TypeError:
-                results['Zc_err'][i][0] = np.nan
-            results['Zc_err'][i][1] = clusz[1][1] - clusz[0]
+
+            # errors on a weighted mean, Eq. 4.19, Bevington
+            results['Zc_err'][i] = 1./np.sqrt(np.sum(1./data.redshift_err.values))
+
+#            try:
+#                results['Zc_err'][i][0] = clusz[0] - clusz[1][0]
+#            except TypeError:
+#                results['Zc_err'][i][0] = np.nan
+#            results['Zc_err'][i][1] = clusz[1][1] - clusz[0]
 
             # calculate the LOSVD with the mcmc, without error to start
             LOSVD, LOSVD_dist = findLOSVDmcmc(data)
             results['LOSVD'][i] = LOSVD[0]
-            results['LOSVD_err'][i] = LOSVD[1], LOSVD[2]
             results['LOSVD_dist'][i] = LOSVD_dist[:,0] # only LOSVD column
+            results['LOSVD_err'][i] = np.std(LOSVD_dist[:,0])
 
             # calculate the mass
             data['LOSVD'] = LOSVD[0]
             results['MASS'][i] = calc_mass_Evrard(data)
 
+            # propigation of errors, Bevington
+            results['MASS_err'][i] = results['MASS'][i]/0.364 *\
+                        (results['LOSVD_err'][i]/ results['LOSVD'][i])
+
             # bootstrap error on the mass
-            alpha = 0.32 # 95% CI.
-            resamples = 500
-            mass = calc_mass_Evrard(data)
+#            alpha = 0.32 # 95% CI.
+#            resamples = 500
+#            mass = calc_mass_Evrard(data)
 
             # this reasamples the dataframe to bootstrap the error on the
             # mass
-            idx = np.random.random_integers(0, len(data)-1,
-                size=(resamples, len(data)-1))
-            mass_ci = np.sort([calc_mass_Evrard(data.iloc[row]) for row in
-                    idx])
-            limits = (mass_ci[int((alpha/2.0) * resamples)],
-                    mass_ci[int((1-alpha/2.0) * resamples)])
-            try:
-                results['MASS_err'][i][0] = mass - limits[0]
-            except TypeError:
-                results['MASS_err'][i][0] = np.nan
-            results['MASS_err'][i][1] = limits[1] - mass
+#            idx = np.random.random_integers(0, len(data)-1,
+#                size=(resamples, len(data)-1))
+#            mass_ci = np.sort([calc_mass_Evrard(data.iloc[row]) for row in
+#                    idx])
+#            limits = (mass_ci[int((alpha/2.0) * resamples)],
+#                    mass_ci[int((1-alpha/2.0) * resamples)])
+#            try:
+#                results['MASS_err'][i][0] = mass - limits[0]
+#            except TypeError:
+#                results['MASS_err'][i][0] = np.nan
+#            results['MASS_err'][i][1] = limits[1] - mass
 
 
-            try:
-                print c, mass, limits[0], limits[1]
-            except TypeError:
-                print c, mass/1e15, '---', limits[1]/1e15
+#            try:
+#                print c, mass, limits[0], limits[1]
+#            except TypeError:
+#                print c, mass/1e15, '---', limits[1]/1e15
 
         with hdf.File('results_cluster.hdf5', 'w') as f:
             f['cluster props'] = results
