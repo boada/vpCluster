@@ -40,7 +40,8 @@ def findseparationSpatial(data, center):
     return data
 
 def findLOSV(data, avgz):
-    ''' Finds the line of sight velocity for each of the galaxies.
+    ''' Finds the line of sight velocity for each of the galaxies. Computes the
+    LOSVD error as 2* redshift error.
 
     '''
 
