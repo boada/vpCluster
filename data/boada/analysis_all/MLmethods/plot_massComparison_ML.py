@@ -157,7 +157,7 @@ for d, c, style, zo in zip([target], ['#7A68A6'], ['-'], [1]):
 line1 = pyl.Line2D([], [], ls='-', color='#7A68A6')
 line2 = pyl.Line2D([], [], ls='--', color='#188487')
 line3 = pyl.Line2D([], [], ls='-.', color='#e24a33')
-ax1.legend((line1), ('Targeted'), loc=2)
+#ax1.legend(line1, 'Targeted', loc=2)
 
 #### tweak ####
 ax1.set_xticks([12,13,14,15])
