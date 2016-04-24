@@ -3,20 +3,18 @@ import pylab as pyl
 from glob import glob
 
 files = glob('*.csv')
-
+s = 0
 for f in files:
     results = pd.read_csv(f)
-    # good redshifts
+    # redshifts
     try:
         q0 = pyl.append(q0, results[results.Q == 0].r.values)
         q1 = pyl.append(q1, results[results.Q == 1].r.values)
-        x = ~pyl.isnan(results.fiber) & pyl.isnan(results.Q)
-        q2 = pyl.append(q2, results.r.values[x.values])
+        q2 = pyl.append(q2, results[results.Q == 2].r.values)
     except NameError:
         q0 = results[results.Q==0].r.values
         q1 = results[results.Q==1].r.values
-        x = ~pyl.isnan(results.fiber) & pyl.isnan(results.Q)
-        q2 = results.r.values[x.values]
+        q2 = results[results.Q==2].r.values
 
 # make a figure
 f = pyl.figure(1,figsize=(5,5*(pyl.sqrt(5.)-1.0)/2.0))
@@ -27,7 +25,6 @@ ax.hist(q2, weights=pyl.zeros_like(q2)+1./q2.size, histtype='step', bins=bins,
         lw=2, label='Q=2')
 ax.hist(q1, weights=pyl.zeros_like(q1)+1./q1.size, histtype='step', bins=bins,
         lw=2, label='Q=1')
-q0 = q0[~pyl.isnan(q0)]
 ax.hist(q0, weights=pyl.zeros_like(q0)+1./q0.size, histtype='step', bins=bins,
         lw=2, label='Q=0')
 

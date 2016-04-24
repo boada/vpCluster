@@ -1,0 +1,26 @@
+## job name
+#BSUB -J targetedRealistic_async
+##BSUB -J targetedPerfect_async
+
+## send stderr and stdout to the same file
+#BSUB -o output.%J
+
+## login shell to avoid copying env from login session
+## also helps the module function work in batch jobs
+#BSUB -L /bin/bash
+
+## 30 minutes of walltime ([HH:]MM)
+## 10 hours for Perfect knowledge
+## 0.25 hours for Realistic knowledge
+#BSUB -W 1:00
+
+## numprocs
+#BSUB -n 20
+
+## 20 cores/node
+#BSUB -R 'span[ptile=20]'
+
+source /home/boada/.bashrc
+time py mkTargeted_async.py
+#time py mkFullKnowledge.py
+
