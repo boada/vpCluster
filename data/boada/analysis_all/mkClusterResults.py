@@ -231,12 +231,6 @@ if __name__ == "__main__":
             # errors on a weighted mean, Eq. 4.19, Bevington
             results['Zc_err'][i] = 1./np.sqrt(np.sum(1./data.redshift_err.values))
 
-#            try:
-#                results['Zc_err'][i][0] = clusz[0] - clusz[1][0]
-#            except TypeError:
-#                results['Zc_err'][i][0] = np.nan
-#            results['Zc_err'][i][1] = clusz[1][1] - clusz[0]
-
             # calculate the LOSVD with the mcmc, without error to start
             LOSVD, LOSVD_dist = findLOSVDmcmc(data)
             results['LOSVD'][i] = LOSVD[0]
@@ -251,30 +245,6 @@ if __name__ == "__main__":
             results['MASS_err'][i] = results['MASS'][i]/0.364 *\
                         (results['LOSVD_err'][i]/ results['LOSVD'][i])
 
-            # bootstrap error on the mass
-#            alpha = 0.32 # 95% CI.
-#            resamples = 500
-#            mass = calc_mass_Evrard(data)
-
-            # this reasamples the dataframe to bootstrap the error on the
-            # mass
-#            idx = np.random.random_integers(0, len(data)-1,
-#                size=(resamples, len(data)-1))
-#            mass_ci = np.sort([calc_mass_Evrard(data.iloc[row]) for row in
-#                    idx])
-#            limits = (mass_ci[int((alpha/2.0) * resamples)],
-#                    mass_ci[int((1-alpha/2.0) * resamples)])
-#            try:
-#                results['MASS_err'][i][0] = mass - limits[0]
-#            except TypeError:
-#                results['MASS_err'][i][0] = np.nan
-#            results['MASS_err'][i][1] = limits[1] - mass
-
-
-#            try:
-#                print c, mass, limits[0], limits[1]
-#            except TypeError:
-#                print c, mass/1e15, '---', limits[1]/1e15
 
         with hdf.File('results_cluster.hdf5', 'w') as f:
             f['cluster props'] = results
