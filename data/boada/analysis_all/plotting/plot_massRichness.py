@@ -5,7 +5,7 @@ import h5py as hdf
 def mkError(x, x_err):
     return 0.434 * x_err/x
 
-with hdf.File('./../results_cluster.hdf5', 'r') as f:
+with hdf.File('./../MLmethods/ML_predicted_masses.hdf5', 'r') as f:
     dset = f[f.keys()[0]]
     data = dset.value
     data.sort(order='ID')
@@ -14,8 +14,9 @@ richnessData = pyl.genfromtxt('./boada_rich.txt', names=True, dtype=None)
 richnessData.sort(order='name')
 
 
-mass = pyl.log10(data['MASS'])
-yerr = mkError(data['MASS'], data['MASS_err'])
+mass = data['ML_pred_3d']
+yerr = data['ML_pred_3d_err']
+#yerr = mkError(data['MASS'], data['MASS_err'])
 
 ax = pyl.subplot()
 
