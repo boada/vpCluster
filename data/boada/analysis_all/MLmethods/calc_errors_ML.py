@@ -43,13 +43,13 @@ def runningStatistic(stat, true, pred, **kwargs):
         try:
             mean, var, std = stats.mvsdist(pred[indx==k] - true[indx==k])
             #print '$%.2f\pm{%.2f}$ &' % (std.mean(),std.std()),
+            runnings.append(std.mean())
         except ValueError:
-            pass
+            runnings.append(np.nan)
             #print '$%.2f\pm{%.2f}$ &' % (np.nan,np.nan),
         runningb.append(b)
-        runnings.append(s)
     print ''
-    return
+    return runningb, runnings
 
 ### Targeted ###
 ################
@@ -59,6 +59,22 @@ with hdf.File('./buzzard_targetedRealistic_masses.hdf5', 'r') as f:
 # filter bad values
 mask = (target['ML_pred_1d'] != 0)
 target = target[mask]
+
+
+# make a container for the biases 
+bins = np.arange(11.5,16,0.5)
+results = np.zeros((bins.size,), dtype= [('bins', '>f4'),
+    ('powerlaw_bias', '>f4'),
+    ('ML_bias_1d', '>f4'),
+    ('ML_bias_2d', '>f4'),
+    ('ML_bias_3d', '>f4'),
+    ('powerlaw_scatter', '>f4'),
+    ('ML_scatter_1d', '>f4'),
+    ('ML_scatter_2d', '>f4'),
+    ('ML_scatter_3d', '>f4')])
+
+
+results['bins'] = bins
 
 for d in [target]:
 
@@ -72,12 +88,18 @@ for d in [target]:
     print('power law')
     running = runningStatistic(bias, np.log10(d['M200c']),
             np.log10(d['MASS']))
+    results['powerlaw_bias'] = running[0]
+    results['powerlaw_scatter'] = running[1]
+
 ############
 #### 1d ####
 ############
     print('1d')
     running = runningStatistic(bias, np.log10(d['M200c']),
             d['ML_pred_1d'])
+    results['ML_bias_1d'] = running[0]
+    results['ML_scatter_1d'] = running[1]
+
 
 #############
 #### 2d #####
@@ -85,6 +107,8 @@ for d in [target]:
     print('2d')
     running = runningStatistic(bias, np.log10(d['M200c']),
             d['ML_pred_2d'])
+    results['ML_bias_2d'] = running[0]
+    results['ML_scatter_2d'] = running[1]
 
 ##############
 ##### 3d #####
@@ -92,5 +116,10 @@ for d in [target]:
     print('3d')
     running = runningStatistic(bias, np.log10(d['M200c']),
             d['ML_pred_3d'])
+    results['ML_bias_3d'] = running[0]
+    results['ML_scatter_3d'] = running[1]
 
     print '-----'
+
+with hdf.File('biasandScatter.hdf5', 'w') as f:
+    f['biasandscatter'] = results

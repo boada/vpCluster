@@ -1,9 +1,6 @@
 from __future__ import print_function
 import numpy as np
-from itertools import combinations
-from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn import preprocessing
 import h5py as hdf
 
 def pred_ints(model, X, mrf, percentile=68):
@@ -24,7 +21,8 @@ def pred_ints(model, X, mrf, percentile=68):
     err_down = mrf - err
     err_up = mrf + err
 
-    return err_down, err_up
+    return err
+    #return err_down, err_up
 
 ### Training Data ###
 #####################
@@ -66,13 +64,21 @@ with hdf.File('./../results_cluster.hdf5', 'r') as f:
     dset = f[f.keys()[0]]
     obs = dset.value
 
+results = np.zeros((obs.size,), dtype= [('ID', 'a', 25),
+    ('ML_pred_3d', '>f4'),
+    ('ML_pred_3d_err', '>f4')])
 
 X_pred = np.column_stack((obs['Zc'], obs['MEMBERS'],
     np.log10(obs['LOSVD'])))
 
-mrf = rf.predict(X_pred)
 
+results['ID'] = obs['ID']
+results['ML_pred_3d'] = rf.predict(X_pred)
+results['ML_pred_3d_err'] = pred_ints(rf, X_pred, results['ML_pred_3d'])
 
+#### Write out the masses ####
+with hdf.File('ML_predicted_masses.hdf5', 'w') as f:
+    f['mass_results'] = results
 
 
 
