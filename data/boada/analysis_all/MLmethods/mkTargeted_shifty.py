@@ -5,9 +5,12 @@ from data_handler import mkTruth, mkHalo, mkQs
 from halo_handler import find_indices, find_indices_multi
 from calc_cluster_props import (updateArray, findClusterRedshift, findLOSV,
                                 shifty_gapper, findLOSVDmcmc,
-                                calc_mass_Evrard, findSeperationSpatial)
+                                calc_mass_Evrard, findSeperationSpatial,
+                                rejectInterlopers_group)
 import os
 from astLib import astCoords
+from astLib import astStats as ast
+
 
 class AsyncFactory:
     def __init__(self, func, cb_func):
@@ -22,17 +25,41 @@ class AsyncFactory:
         self.pool.close()
         self.pool.join()
 
-def worker(pos, data, center):
+def worker(pos, data, center, zspec):
     #print "PID: %d \t Value: %d" % (os.getpid(), pos)
     data = updateArray(data)
-    data = findClusterRedshift(data)
+    data['CLUSZ'] = zspec
+    #data = findClusterRedshift(data)
     data = findSeperationSpatial(data, center)
     if data.size >= 20:
         members = shifty_gapper(data['SEP'], data['Z'], data['CLUSZ'][0],
                 ngap=20, vlimit=5000)
 
     else:
-    print members
+        N_members = -1
+        count = 0
+        while True:
+            try:
+                members = rejectInterlopers_group(data, _losvd)
+            except NameError:
+                members = rejectInterlopers_group(data)
+            if N_members == np.where(members == True)[0].size:
+                break
+            else:
+                N_members = np.where(members == True)[0].size
+            data = findLOSV(data)
+            try:
+                _losvd = 1.135 * \
+                    ast.gapperEstimator(data['LOSV'][members])
+            except ZeroDivisionError:
+                members = rejectInterlopers_group(data)
+#                print 'oh snap!'
+                break
+            count +=1
+            if count >= 10:
+                break
+
+#    print 'members', np.where(members == True)[0].size
     data = data[members]
     data = findLOSV(data)
     data, sigma_dist = findLOSVDmcmc(data)
@@ -43,6 +70,7 @@ def cb_func((pos, data, sigma_dist)):
     if pos % 1000 == 0:
         print pos
     results['IDX'][pos] = pos
+    results['NMEM'][pos] = data.size
     results['CLUSZ'][pos] = data['CLUSZ'][0]
     results['LOSVD'][pos] = data['LOSVD'][0]
     results['MASS'][pos] = data['MASS'][0]
@@ -82,12 +110,13 @@ if __name__ == "__main__":
         ('LOSVD', '>f4'),
         ('MASS', '>f4'),
         ('NGAL', '>i4'),
+        ('NMEM', '>i4'),
         ('LOSVD_err', '>f4', (2,)),
         ('LOSVD_dist', '>f4', (10000,))])
 
     print('do work', len(x), 'clusters to go!')
     keepBad = False
-    for j,i in enumerate(x[3200:3300]):
+    for j,i in enumerate(x):
         center = (maskedHalo['ra'][uniqueIdx[i]],
                 maskedHalo['dec'][uniqueIdx[i]])
         r = 2.3 * 60 # in arcseconds
@@ -97,10 +126,12 @@ if __name__ == "__main__":
         RAmask = (RAmin < truth['RA']) & (truth['RA'] < RAmax)
         DECmask = (DECmin < truth['DEC']) & (truth['DEC'] < DECmax)
         maskedTruth = truth[RAmask & DECmask]
-        print maskedTruth.size, gals[i].size, maskedHalo['zspec'][uniqueIdx[i]]
-
+#        print maskedTruth.size, gals[i].size, maskedHalo['zspec'][uniqueIdx[i]]
+#        pos, data, sigma_dist = worker(j, maskedTruth, center,
+#                maskedHalo['zspec'][uniqueIdx[i]])
         if gals[i].size >= 5:
-            async_worker.call(j, maskedTruth, center)
+            async_worker.call(j, maskedTruth, center,
+                    maskedHalo['zspec'][uniqueIdx[i]])
             # update results array
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
@@ -118,12 +149,7 @@ if __name__ == "__main__":
 
     async_worker.wait()
 
-    try:
-        #os.remove('result_targetedPerfect.hdf5')
-        os.remove('buzzard_targetedRealistic.hdf5')
-    except OSError:
-        pass
     #with hdf.File('result_targetedPerfect.hdf5', 'w') as f:
     #    f['result_targetedPerfect'] = results
-    with hdf.File('buzzard_targetedRealistic.hdf5', 'w') as f:
+    with hdf.File('buzzard_targetedRealistic_memberSelected.hdf5', 'w') as f:
         f['buzzard_targetedRealistic'] = results
