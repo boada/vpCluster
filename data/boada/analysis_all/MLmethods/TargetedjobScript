@@ -21,6 +21,6 @@
 #BSUB -R 'span[ptile=20]'
 
 source /home/boada/.bashrc
-time py mkTargeted_async.py
+time py mkTargeted_shifty.py 
 #time py mkFullKnowledge.py
 
