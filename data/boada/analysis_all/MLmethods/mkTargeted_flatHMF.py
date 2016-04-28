@@ -64,7 +64,7 @@ def cb_func((pos, data, sigma_dist)):
 if __name__ == "__main__":
     async_worker = AsyncFactory(worker, cb_func)
     halo = mkHalo()
-    truth = mkTruth()
+    truth = mkTruth(flatHMF=True)
     Qs = mkQs()
 
     # this is the part that makes it realistic or not
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     masses = [np.log10(maskedHalo['m200c'][uniqueIdx[i]]/0.70) for i in x]
     indexes = np.digitize(masses, massBins)
     # now we choose some of the indexes uniformly -- How many do we want?
-    indxChoice = np.random.randint(1, massBins.size, 1000)
+    indxChoice = np.random.randint(1, massBins.size, 5000)
 
     # figure out where they fit, and pick one, also uniformly
     picks = [np.random.choice(np.where(indexes==i)[0]) for i in indxChoice]
@@ -130,9 +130,5 @@ if __name__ == "__main__":
     async_worker.wait()
 
     print('results')
-    try:
-        os.remove('surveyComplete_noRotations.hdf5')
-    except OSError:
-        pass
-    with hdf.File('surveyComplete_noRotations.hdf5', 'w') as f:
+    with hdf.File('buzzard_targetedRealistic_flatHMF.hdf5', 'w') as f:
         f['surveyComplete'] = results
