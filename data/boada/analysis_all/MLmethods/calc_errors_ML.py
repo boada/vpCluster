@@ -29,7 +29,7 @@ def bias(true, pred):
 def runningStatistic(stat, true, pred, **kwargs):
     ''' b = bias and s = uncertainty on that bias '''
 
-    bins = np.arange(11.5,16,0.5)
+    bins = np.arange(11.5,16,0.1)
     indx = np.digitize(true, bins)-1
     binNumber = len(bins)
 
@@ -53,7 +53,7 @@ def runningStatistic(stat, true, pred, **kwargs):
 
 ### Targeted ###
 ################
-with hdf.File('./buzzard_targetedRealistic_masses.hdf5', 'r') as f:
+with hdf.File('./buzzard_targetedRealistic_shifty_masses.hdf5', 'r') as f:
     dset = f[f.keys()[0]]
     target = dset['M200c', 'MASS', 'ML_pred_1d', 'ML_pred_2d', 'ML_pred_3d']
 # filter bad values
@@ -62,7 +62,7 @@ target = target[mask]
 
 
 # make a container for the biases 
-bins = np.arange(11.5,16,0.5)
+bins = np.arange(11.5,16,0.1)
 results = np.zeros((bins.size,), dtype= [('bins', '>f4'),
     ('powerlaw_bias', '>f4'),
     ('ML_bias_1d', '>f4'),
