@@ -1,45 +1,54 @@
 import aplpy
-f1 = figure(1).axes[0]
-gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', north=True, subplot=(2,2,2))
-gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
-        north=True, subplot=(2,2,2))
-gc2 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
-        north=True, subplot=(2,2,2))
-gc3 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
-        north=True, subplot=(2,2,3))
-gc4 = aplpy.FITSFigure('c203p83+41p00_r_mosaic.fits', figure=figure(1),
-        north=True, subplot=(2,2,4))
-gc2.show_grayscale(stretch='arcsinh')
-gc3.show_grayscale(stretch='arcsinh')
-gc4.show_grayscale(stretch='arcsinh')
-figure(1).axes
-gc1.set_tick_labels(xformat='hh:mm', yformat='dd:mm')
-gc1.set_tick_labels_format(xformat='hh:mm', yformat='dd:mm')
-gc1.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm')
-gc1.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
-gc2.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
-gc3.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
-gc4.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
-tight_layout()
-f1.set_title('c203p83+41p00')
-draw()
-gc1.set_theme('publication')
-gc2.set_theme('publication')
-gc3.set_theme('publication')
-gc4.set_theme('publication')
-gc2.tick_labels.hide_x()
-gc2.tick_labels.show_x()
-gc2.axis_labels.hid()
-gc2.axis_labels.hide()
-gc1.axis_labels.hide_x()
-gc4.axis_labels.hide_y()
-tight_layout()
-gc1.set_tick_labels_size('small')
-gc2.set_tick_labels_size('small')
-gc3.set_tick_labels_size('small')
-gc4.set_tick_labels_size('small')
-tight_layout()
-f3 = figure(1).axes[2]
-f3.set_title('c203p83+41p00')
-draw()
-tight_layout()
+from glob import glob
+import pylab as pyl
+
+files = glob('*.fits')
+fig = pyl.figure(figsize=(13.2, 10.5))
+
+i = 0
+for f in files:
+    cluster = f.split('_')[0]
+    if cluster == 'c203p83+41p0':
+        continue
+    gc = aplpy.FITSFigure(f, figure=fig, north=True, subplot=(3,3,i+1))
+    gc.show_grayscale(stretch='arcsinh')
+    gc.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
+    gc.set_theme('publication')
+    gc.set_tick_labels_size('small')
+
+    # now for the axis lables
+    if not i%3 == 0:
+        gc.axis_labels.hide_y()
+    if i < 6:
+        gc.axis_labels.hide_x()
+
+    ax = fig.axes[-1]
+    ax.set_title(cluster)
+
+    data = pyl.genfromtxt('./../analysis_all/redshifts/' +\
+            cluster.split('_')[0]+'_redshifts.csv', delimiter=',', names=True,
+            dtype=None)
+
+    try:
+        # filter out the specz's
+        x = pyl.isnan(data['Specz'])
+        # draw the specz's
+        gc.show_markers(data['ra'][~x], data['dec'][~x], edgecolor='#e24a33',
+                facecolor='none', marker='D', s=50)
+
+    except ValueError:
+        print 'no Speczs found'
+
+    # draw observed but not redshifted
+    x = data['Q'] == 2
+    gc.show_markers(data['ra'][x], data['dec'][x], edgecolor='#a60628',
+            facecolor='none', marker='s', s=30)
+
+    # draw redshifted
+    x = (data['Q'] == 0) | (data['Q'] == 1)
+    gc.show_markers(data['ra'][x], data['dec'][x], edgecolor='#188487',
+            facecolor='none', marker='o', s=30)
+
+    i+=1
+
+pyl.tight_layout()
