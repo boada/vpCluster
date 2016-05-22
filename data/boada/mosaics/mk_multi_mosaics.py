@@ -11,7 +11,7 @@ for f in files:
     if cluster == 'c203p83+41p0':
         continue
     gc = aplpy.FITSFigure(f, figure=fig, north=True, subplot=(3,3,i+1))
-    gc.show_grayscale(stretch='arcsinh')
+    gc.show_grayscale(stretch='arcsinh', pmin=1, pmax=99.9)
     gc.set_tick_labels_format(xformat='hh:mm:ss', yformat='dd:mm:ss')
     gc.set_theme('publication')
     gc.set_tick_labels_size('small')
