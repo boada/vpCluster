@@ -63,7 +63,7 @@ filepath = './../../may_2012/analysis/c203p83+41p0/'
 
 specs = [{'file': 'c203p83+41p0_NE_3.fits', 'fiber':106, 'z':0.22354},
             {'file': 'c203p83+41p0_SE_3.fits', 'fiber':198, 'z':0.11766},
-            {'file': 'c203p83+41p0_NW_3.fits', 'fiber':20, 'z':0.22354}]
+            {'file': 'c203p83+41p0_NW_3.fits', 'fiber':20, 'z':0.2310}]
 
 # make some figures
 f, ax = pyl.subplots(3,1, squeeze=True)
