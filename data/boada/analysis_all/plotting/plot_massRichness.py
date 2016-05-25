@@ -14,8 +14,8 @@ richnessData = pyl.genfromtxt('./boada_rich.txt', names=True, dtype=None)
 richnessData.sort(order='name')
 
 
-mass = pyl.log10(data['MASS'])
-yerr = mkError(data['MASS'], data['MASS_err'])
+mass = data['MASS']
+yerr = data['MASS_err']
 
 f = pyl.figure(figsize=(5,5*(pyl.sqrt(5.)-1.0)/2.0))
 ax = f.add_subplot(111)
