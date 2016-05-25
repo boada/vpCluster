@@ -219,6 +219,9 @@ if __name__ == "__main__":
             data = pd.read_csv(c)
             results['Q0'][i] = data[data.Q ==0].shape[0]
             results['Q1'][i] = data[data.Q ==1].shape[0]
+            allobs = pd.read_csv('./redshifts/%s_redshifts.csv' %
+                    results['ID'][i])
+            results['SOURCES'][i] = allobs[~np.isnan(allobs.Q)].shape[0]
 
             # filter out the non-members
             data = data[data.interloper=='NO']
@@ -245,6 +248,8 @@ if __name__ == "__main__":
             results['MASS_err'][i] = results['MASS'][i]/0.364 *\
                         (results['LOSVD_err'][i]/ results['LOSVD'][i])
 
+        results['MASS_err'] = 0.434* results['MASS_err']/results['MASS']
+        results['MASS'] = np.log10(results['MASS'])
 
         with hdf.File('results_cluster.hdf5', 'w') as f:
             f['cluster props'] = results
