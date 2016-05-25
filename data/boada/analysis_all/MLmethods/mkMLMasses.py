@@ -43,7 +43,7 @@ maskedDataT = data[~mask]
 badData = data[mask]
 
 
-X = np.column_stack([data['ZSPEC'], data['NGAL'], np.log10(data['LOSVD'])])
+X = np.column_stack([data['NGAL'], np.log10(data['LOSVD'])])
 y = np.log10(data['M200c'])
 
 
@@ -68,7 +68,7 @@ results = np.zeros((obs.size,), dtype= [('ID', 'a', 25),
     ('ML_pred_3d', '>f4'),
     ('ML_pred_3d_err', '>f4')])
 
-X_pred = np.column_stack((obs['Zc'], obs['MEMBERS'],
+X_pred = np.column_stack((obs['MEMBERS'],
     np.log10(obs['LOSVD'])))
 
 
