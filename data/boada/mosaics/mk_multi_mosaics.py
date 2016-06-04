@@ -33,7 +33,7 @@ for f in files:
         # filter out the specz's
         x = pyl.isnan(data['Specz'])
         # draw the specz's
-        gc.show_markers(data['ra'][~x], data['dec'][~x], edgecolor='#e24a33',
+        gc.show_markers(data['ra'][~x], data['dec'][~x], edgecolor='#ffbf00',
                 facecolor='none', marker='D', s=50)
 
     except ValueError:
