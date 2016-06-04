@@ -119,7 +119,7 @@ if __name__ == "__main__":
     for j,i in enumerate(x):
         center = (maskedHalo['ra'][uniqueIdx[i]],
                 maskedHalo['dec'][uniqueIdx[i]])
-        r = 2.3 * 60 # in arcseconds
+        r = 10 * 60 # in arcseconds
         RAmin, DECmin = astCoords.shiftRADec(center[0], center[1], -r, -r)
         RAmax, DECmax = astCoords.shiftRADec(center[0], center[1], r, r)
 
@@ -151,5 +151,5 @@ if __name__ == "__main__":
 
     #with hdf.File('result_targetedPerfect.hdf5', 'w') as f:
     #    f['result_targetedPerfect'] = results
-    with hdf.File('buzzard_targetedRealistic_memberSelected.hdf5', 'w') as f:
+    with hdf.File('buzzard_targetedRealistic_shifty_big.hdf5', 'w') as f:
         f['buzzard_targetedRealistic'] = results
