@@ -11,7 +11,7 @@ with hdf.File('./../MLmethods/ML_predicted_masses.hdf5', 'r') as f:
 
 
 for i in range(results.size):
-    print('%s & %d & %d (%d) & %d & %.4f$\pm{%.3f}$ & %d$\pm{%d}$ & '\
+    print('%s & %d & %d (%d) & %d & %.4f$\pm{%.4f}$ & %d$\pm{%d}$ & '\
     r'%.2f$\pm{%.2f}$ & %.2f$\pm{%.2f}$ \\' % (results['ID'][i],
         results['SOURCES'][i],
     results['Q0'][i],
