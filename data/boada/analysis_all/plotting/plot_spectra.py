@@ -71,11 +71,17 @@ f, ax = pyl.subplots(3,1, squeeze=True)
 for i, (spec, c) in enumerate(zip(specs, ['#a60628', '#7a68a6', '#348abd'])):
     RSS = loadFile(filepath + spec['file'])
     o = RSS[246-spec['fiber']]['object']
+    e = RSS[246-spec['fiber']]['error']
     o.smooth(15)
+    e.smooth(15)
     if i == 1:
         ax[i].plot(o.wavelength/(1+spec['z']), o.flux/1.1, c=c)
+        ax[i].fill_between(o.wavelength/(1+spec['z']), o.flux/1.1 - e.flux,
+                e.flux+o.flux/1.1, color='0.8')
     else:
         ax[i].plot(o.wavelength/(1+spec['z']), o.flux, c=c)
+        ax[i].fill_between(o.wavelength/(1+spec['z']), o.flux - e.flux,
+                e.flux+o.flux, color='0.8')
 
     ax[i].text(3250, 0.8, 'Q = %d' % i, ha='center', size=20)
     if i < 2:
@@ -111,7 +117,7 @@ for a in ax:
 ax[0].set_xticklabels([])
 ax[1].set_xticklabels([])
 
-ax[2].set_xlabel('Rest Wavelength')
+ax[2].set_xlabel('Rest Wavelength (Angtrom)')
 ax[1].set_ylabel('Relative Flux')
 
 
