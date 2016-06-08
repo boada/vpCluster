@@ -20,7 +20,7 @@ ax1s.yaxis.set_minor_locator(AutoMinorLocator())
 
 ### Targeted ###
 ################
-with hdf.File('./buzzard_targetedRealistic_shifty_masses.hdf5', 'r') as f:
+with hdf.File('./buzzard_targetedRealistic_comparison_shifty.hdf5', 'r') as f:
     dset = f[f.keys()[0]]
     target = dset['M200c', 'MASS', 'ML_pred_1d', 'ML_pred_2d2', 'ML_pred_3d']
 # filter bad values

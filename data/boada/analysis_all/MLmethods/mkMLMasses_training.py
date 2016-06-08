@@ -102,11 +102,17 @@ def addMasses(data, generator):
         data['ML_pred_2d_err'][test['IDX']] = result
 
     #############
-    #### 2d #####
+    #### 2d2 ####
     #############
-        y = np.column_stack([np.log10(train['LOSVD']), train['NGAL']])
+        try:
+            y = np.column_stack([np.log10(train['LOSVD']), train['NMEM']])
+        except ValueError:
+            y = np.column_stack([np.log10(train['LOSVD']), train['NGAL']])
         rf.fit(y, X)
-        obs = np.column_stack([np.log10(test['LOSVD']), test['NGAL']])
+        try:
+            obs = np.column_stack([np.log10(test['LOSVD']), test['NMEM']])
+        except ValueError:
+            obs = np.column_stack([np.log10(test['LOSVD']), test['NGAL']])
         mrf = rf.predict(obs)
 
         data['ML_pred_2d2'][test['IDX']] = mrf
@@ -122,11 +128,19 @@ def addMasses(data, generator):
     ##############
     ##### 3d #####
     ##############
-        y = np.column_stack([np.log10(train['LOSVD']), train['ZSPEC'],
-            train['NGAL']])
+        try:
+            y = np.column_stack([np.log10(train['LOSVD']), train['ZSPEC'],
+                train['NMEM']])
+        except ValueError:
+            y = np.column_stack([np.log10(train['LOSVD']), train['ZSPEC'],
+                train['NGAL']])
         rf.fit(y, X)
-        obs = np.column_stack([np.log10(test['LOSVD']), test['ZSPEC'],
-            test['NGAL']])
+        try:
+            obs = np.column_stack([np.log10(test['LOSVD']), test['ZSPEC'],
+                test['NMEM']])
+        except ValueError:
+            obs = np.column_stack([np.log10(test['LOSVD']), test['ZSPEC'],
+                test['NGAL']])
         mrf = rf.predict(obs)
 
         data['ML_pred_3d'][test['IDX']] = mrf
@@ -172,8 +186,13 @@ if __name__ == "__main__":
     ################
     with hdf.File('./buzzard_targetedRealistic_shifty.hdf5', 'r') as f:
         dset  = f[f.keys()[0]]
-        data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
-        'LOSVD_err', 'MASS']
+        try:
+            data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
+            'LOSVD_err', 'MASS', 'NMEM']
+            print 'Using NMEM'
+        except ValueError:
+            data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
+            'LOSVD_err', 'MASS']
         #data = dset.value
 
     # add the extra fields
@@ -184,8 +203,13 @@ if __name__ == "__main__":
     # prior on the LOSVD calculation which will limit the LOSVD to a maxium.
     # Because the clusters are so far apart the LOSVD is super high.
 
-    mask = ((np.log10(data['LOSVD']) > 3.12 ) & (data['M200c'] < 10**14.5) |
-        (data['LOSVD'] < 50))
+    try:
+        mask = ((np.log10(data['LOSVD']) > 3.12 ) &
+                (data['M200c'] < 10**14.5) | (data['LOSVD'] < 50) |
+                (data['NMEM'] < 5))
+    except ValueError:
+        mask = ((np.log10(data['LOSVD']) > 3.12 ) &
+                (data['M200c'] < 10**14.5) | (data['LOSVD'] < 50))
     maskedDataT = data[~mask]
     badData = data[mask]
 

@@ -5,14 +5,17 @@ import corner
 
 ### Targeted ###
 ################
-with hdf.File('./../MLmethods/buzzard_targetedRealistic_shifty.hdf5', 'r') as f:
+#with hdf.File('./../MLmethods/buzzard_targetedRealistic_shifty.hdf5', 'r') as f:
+with hdf.File('./../MLmethods/buzzard_targetedRealistic_flatHMF.hdf5', 'r') as f:
     dset  = f[f.keys()[0]]
     #data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
     #    'LOSVD_err', 'MASS', 'LOSVD_dist']
-    data = dset['ZSPEC', 'M200c', 'LOSVD', 'NMEM']
+    data = dset['ZSPEC', 'M200c', 'LOSVD']
+    #data = dset['ZSPEC', 'M200c', 'LOSVD', 'NMEM']
 
 mask = ((pyl.log10(data['LOSVD']) > 3.12 ) & (data['M200c'] < 10**14.5) |
-    (data['LOSVD'] < 50) | (data['NMEM'] <=5))
+    (data['LOSVD'] < 50))
+    #(data['LOSVD'] < 50) | (data['NMEM'] <=5))
 data = data[~mask]
 #badData = data[mask]
 

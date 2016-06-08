@@ -26,25 +26,35 @@ def pred_ints(model, X, mrf, percentile=68):
 
 ### Training Data ###
 #####################
-with hdf.File('./buzzard_targetedRealistic.hdf5', 'r') as f:
+with hdf.File('./buzzard_targetedRealistic_flatHMF_shifty.hdf5', 'r') as f:
     dset  = f[f.keys()[0]]
-    #data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
-    #    'LOSVD_err', 'MASS', 'LOSVD_dist']
-    data = dset['ZSPEC', 'M200c', 'LOSVD', 'NGAL']
+    try:
+        data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
+        'LOSVD_err', 'MASS', 'NMEM']
+    except ValueError:
+        data = dset['IDX', 'HALOID', 'ZSPEC', 'M200c', 'NGAL', 'LOSVD',
+        'LOSVD_err', 'MASS']
 
 # You have to clean the data here. This is almost certainly from the fact
 # that some of the HALOIDS are repeated at different redshifts. I have a
 # prior on the LOSVD calculation which will limit the LOSVD to a maxium.
 # Because the clusters are so far apart the LOSVD is super high.
+try:
+    mask = ((np.log10(data['LOSVD']) > 3.12 ) &
+            (data['M200c'] < 10**14.5) | (data['LOSVD'] < 50) |
+            (data['NMEM'] < 5))
+except ValueError:
+    mask = ((np.log10(data['LOSVD']) > 3.12 ) &
+            (data['M200c'] < 10**14.5) | (data['LOSVD'] < 50))
 
-mask = ((np.log10(data['LOSVD']) > 3.12 ) & (data['M200c'] < 10**14.5) |
-    (data['LOSVD'] < 50))
 maskedDataT = data[~mask]
 badData = data[mask]
 
-
-X = np.column_stack([data['NGAL'], np.log10(data['LOSVD'])])
-y = np.log10(data['M200c'])
+try:
+    X = np.column_stack([maskedDataT['NMEM'], np.log10(maskedDataT['LOSVD'])])
+except ValueError:
+    X = np.column_stack([maskedDataT['NGAL'], np.log10(maskedDataT['LOSVD'])])
+y = np.log10(maskedDataT['M200c'])
 
 
 #X = preprocessing.scale(X)
@@ -77,7 +87,7 @@ results['ML_pred_3d'] = rf.predict(X_pred)
 results['ML_pred_3d_err'] = pred_ints(rf, X_pred, results['ML_pred_3d'])
 
 #### Write out the masses ####
-with hdf.File('ML_predicted_masses.hdf5', 'w') as f:
+with hdf.File('ML_predicted_masses_flatHMF_shifty.hdf5', 'w') as f:
     f['mass_results'] = results
 
 
