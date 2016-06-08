@@ -15,9 +15,12 @@ for f,c in zip(files, 'rgb'):
         dset = f1[f1.keys()[0]]
         ML = dset.value
 
-    pyl.errorbar(results['MASS'], ML['ML_pred_3d'], xerr=results['MASS_err'],
-            yerr=ML['ML_pred_3d_err'], fmt='o', color=c, markersize=10)
+    pyl.errorbar(results['MASS'], ML['ML_pred'], xerr=results['MASS_err'],
+            yerr=ML['ML_pred_err'], fmt='o', color=c, markersize=10,
+            label=f.rstrip('.hdf5'))
 
-
+pyl.xlabel('M$_{pred, PL}$')
+pyl.ylabel('M$_{pred, ML}$')
+pyl.plot([12,16],[12,16], c='k', zorder=0)
 
 
