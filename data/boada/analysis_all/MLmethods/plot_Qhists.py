@@ -2,7 +2,8 @@ import h5py as hdf
 import pylab as pyl
 
 for i in range(20):
-    with hdf.File('./truth/truth'+str(i).zfill(2)+'_Oii.hdf5', 'r') as f:
+    data_path = '../data/buzzard_v1.0/allbands/truth'
+    with hdf.File(data_path+'/truth'+str(i).zfill(2)+'_Oii.hdf5', 'r') as f:
 
         mags = f['truth%s_Oii' % (str(i).zfill(2))]
         qs = f['Q']
@@ -36,7 +37,7 @@ ax.legend(loc='upper right')
 ax.invert_xaxis()
 
 ax.set_ylim(0,0.5)
-ax.set_xlabel('$m_r$')
+ax.set_xlabel('$m_r$ (mag)')
 ax.set_ylabel('Fraction of Total')
 pyl.show()
 
