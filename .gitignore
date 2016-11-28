@@ -1,6 +1,7 @@
 *.pyc
 *.fits
 *.fit
+*.fz
 *.hdf5
 *.swp
 .DS_Store
