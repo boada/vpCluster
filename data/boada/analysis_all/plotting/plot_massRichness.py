@@ -45,7 +45,7 @@ xerr = mkError(richnessData['lambda'], richnessData['lambda_err'])
 y_obs = data['MASS']
 yerr = data['MASS_err']
 
-f = pyl.figure(figsize=(5,5*(pyl.sqrt(5.)-1.0)/2.0))
+f = pyl.figure(figsize=(7,7*(pyl.sqrt(5.)-1.0)/2.0))
 ax = f.add_subplot(111)
 
 # low mass
@@ -74,6 +74,23 @@ sifonRichness = pyl.array([190.996, 135.59, 202.636, 185.764])
 ax.errorbar(pyl.log10(sifonRichness), pyl.log10(sifonMasses),
         yerr=mkError(sifonMasses, sifonMass_err), fmt='o', color='#7a68a6',
         label='Sifon+2015')
+
+# add the ML predicted points
+with hdf.File('./../MLmethods/ML_predicted_masses_shifty.hdf5', 'r') as f:
+    dset = f[f.keys()[0]]
+    ML = dset.value
+    ML.sort(order='ID')
+
+y_obs = ML['ML_pred']
+yerr = ML['ML_pred_err']
+#ax.errorbar(x_obs[2:], y_obs_ML[2:], xerr=xerr[2:], yerr=yerr_ML[2:],
+#        fmt='o', color='#467821', markersize=10, label='ML$_{\sigma, N_{gal}}$')
+
+#eb = pyl.errorbar(x_obs[:2], y_obs_ML[:2], xerr=xerr[:2], yerr=yerr_ML[:2],
+#        fmt='o',mfc='lightgray', mec='#467821', color='#467821', markersize=10)
+eb[-1][0].set_linestyle('--')
+eb[-1][1].set_linestyle('--')
+
 
 # Set up the sampler.
 nwalkers, ndim = 100, 3
@@ -117,6 +134,6 @@ y = pyl.exp(lny) * 1e14
 ax.plot(pyl.log10(x),pyl.log10(y), ls='--', c='k', zorder=0, label='Farahi+2016')
 
 
-pyl.legend(loc='lower right')
+pyl.legend(loc='lower right', ncol=2)
 pyl.show()
 
