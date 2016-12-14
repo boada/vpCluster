@@ -9,7 +9,6 @@ with hdf.File('./../MLmethods/ML_predicted_masses.hdf5', 'r') as f:
     dset = f[f.keys()[0]]
     ML = dset.value
 
-
 for i in range(results.size):
     print('%s & %d & %d (%d) & %d & %.4f$\pm{%.4f}$ & %d$\pm{%d}$ & '\
     r'%.2f$\pm{%.2f}$ & %.2f$\pm{%.2f}$ \\' % (results['ID'][i],
@@ -26,9 +25,3 @@ for i in range(results.size):
     ML['ML_pred_3d'][i],
     ML['ML_pred_3d_err'][i]
     ))
-
-
-
-
-
-

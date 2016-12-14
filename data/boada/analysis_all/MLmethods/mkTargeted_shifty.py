@@ -4,9 +4,8 @@ import numpy as np
 from data_handler import mkTruth, mkHalo, mkQs
 from halo_handler import find_indices, find_indices_multi
 from calc_cluster_props import (updateArray, findClusterRedshift, findLOSV,
-                                shifty_gapper, findLOSVDmcmc,
-                                calc_mass_Evrard, findSeperationSpatial,
-                                rejectInterlopers_group)
+                                shifty_gapper, findLOSVDmcmc, calc_mass_Evrard,
+                                findSeperationSpatial, rejectInterlopers_group)
 import os
 from astLib import astCoords
 from astLib import astStats as ast
@@ -18,12 +17,13 @@ class AsyncFactory:
         self.cb_func = cb_func
         self.pool = Pool(maxtasksperchild=10)
 
-    def call(self,*args, **kwargs):
+    def call(self, *args, **kwargs):
         self.pool.apply_async(self.func, args, kwargs, self.cb_func)
 
     def wait(self):
         self.pool.close()
         self.pool.join()
+
 
 def worker(pos, data, center, zspec):
     #print "PID: %d \t Value: %d" % (os.getpid(), pos)
@@ -32,8 +32,9 @@ def worker(pos, data, center, zspec):
     #data = findClusterRedshift(data)
     data = findSeperationSpatial(data, center)
     if data.size >= 20:
-        members = shifty_gapper(data['SEP'], data['Z'], data['CLUSZ'][0],
-                ngap=20, vlimit=5000)
+        members = shifty_gapper(data['SEP'],
+                                data['Z'],
+                                data['CLUSZ'][0], ngap=20, vlimit=5000)
 
     else:
         N_members = -1
@@ -53,9 +54,9 @@ def worker(pos, data, center, zspec):
                     ast.gapperEstimator(data['LOSV'][members])
             except ZeroDivisionError:
                 members = rejectInterlopers_group(data)
-#                print 'oh snap!'
+                #                print 'oh snap!'
                 break
-            count +=1
+            count += 1
             if count >= 10:
                 break
 
@@ -63,8 +64,9 @@ def worker(pos, data, center, zspec):
     data = data[members]
     data = findLOSV(data)
     data, sigma_dist = findLOSVDmcmc(data)
-    data = calc_mass_Evrard(data, A1D = 1177, alpha = 0.364)
+    data = calc_mass_Evrard(data, A1D=1177, alpha=0.364)
     return pos, data, sigma_dist
+
 
 def cb_func((pos, data, sigma_dist)):
     if pos % 1000 == 0:
@@ -75,7 +77,8 @@ def cb_func((pos, data, sigma_dist)):
     results['LOSVD'][pos] = data['LOSVD'][0]
     results['MASS'][pos] = data['MASS'][0]
     results['LOSVD_err'][pos] = data['LOSVD_err'][0]
-    results['LOSVD_dist'][pos] = sigma_dist[:,0]
+    results['LOSVD_dist'][pos] = sigma_dist[:, 0]
+
 
 if __name__ == "__main__":
 
@@ -100,52 +103,47 @@ if __name__ == "__main__":
     gals = find_indices_multi(truth['HALOID'], halo['id'], subHalos)
 
     # make the results container
-    x = [i for i,g in enumerate(gals) if g.size >=5]
+    x = [i for i, g in enumerate(gals) if g.size >= 5]
     # make the results container
-    results = np.zeros((len(x),), dtype=[('IDX', '>i4'),
-        ('HALOID', '>i8'),
-        ('ZSPEC', '>f4'),
-        ('M200c', '>f4'),
-        ('CLUSZ', '>f4'),
-        ('LOSVD', '>f4'),
-        ('MASS', '>f4'),
-        ('NGAL', '>i4'),
-        ('NMEM', '>i4'),
-        ('LOSVD_err', '>f4', (2,)),
-        ('LOSVD_dist', '>f4', (10000,))])
+    results = np.zeros(
+        (len(x), ),
+        dtype=[('IDX', '>i4'), ('HALOID', '>i8'), ('ZSPEC', '>f4'),
+               ('M200c', '>f4'), ('CLUSZ', '>f4'), ('LOSVD', '>f4'),
+               ('MASS', '>f4'), ('NGAL', '>i4'), ('NMEM', '>i4'),
+               ('LOSVD_err', '>f4', (2, )), ('LOSVD_dist', '>f4', (10000, ))])
 
     print('do work', len(x), 'clusters to go!')
     keepBad = False
-    for j,i in enumerate(x):
+    for j, i in enumerate(x):
         center = (maskedHalo['ra'][uniqueIdx[i]],
-                maskedHalo['dec'][uniqueIdx[i]])
-        r = 10 * 60 # in arcseconds
+                  maskedHalo['dec'][uniqueIdx[i]])
+        r = 10 * 60  # in arcseconds
         RAmin, DECmin = astCoords.shiftRADec(center[0], center[1], -r, -r)
         RAmax, DECmax = astCoords.shiftRADec(center[0], center[1], r, r)
 
         RAmask = (RAmin < truth['RA']) & (truth['RA'] < RAmax)
         DECmask = (DECmin < truth['DEC']) & (truth['DEC'] < DECmax)
         maskedTruth = truth[RAmask & DECmask]
-#        print maskedTruth.size, gals[i].size, maskedHalo['zspec'][uniqueIdx[i]]
-#        pos, data, sigma_dist = worker(j, maskedTruth, center,
-#                maskedHalo['zspec'][uniqueIdx[i]])
+        #        print maskedTruth.size, gals[i].size, maskedHalo['zspec'][uniqueIdx[i]]
+        #        pos, data, sigma_dist = worker(j, maskedTruth, center,
+        #                maskedHalo['zspec'][uniqueIdx[i]])
         if gals[i].size >= 5:
             async_worker.call(j, maskedTruth, center,
-                    maskedHalo['zspec'][uniqueIdx[i]])
+                              maskedHalo['zspec'][uniqueIdx[i]])
             # update results array
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
             # millenium cosmology
             #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
-            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
+            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]] / 0.70
         elif keepBad:
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
             # millenium cosmology
             #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
-            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
+            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]] / 0.70
 
     async_worker.wait()
 

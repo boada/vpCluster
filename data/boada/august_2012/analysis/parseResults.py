@@ -10,17 +10,18 @@ for f in files:
     data = genfromtxt(f, delimiter='\t', names=True, dtype=None)
     try:
         for fiber, z, Q, z_err in zip(data['Fiber'], data['Redshift'],
-                data['Quality'], data['RedshiftError']):
+                                      data['Quality'], data['RedshiftError']):
             #if Q == 0 or Q == 1:
             r.append((cluster, field, dither.split('.')[0], fiber, Q, z,
-                    z_err))
+                      z_err))
     except TypeError:
         fiber = int(data['Fiber'])
         z = float(data['Redshift'])
         Q = int(data['Quality'])
         z_err = float(data['RedshiftError'])
         if Q == 0 or Q == 1:
-            r.append((cluster, field, dither.split('.')[0], fiber, Q, z, z_err))
+            r.append(
+                (cluster, field, dither.split('.')[0], fiber, Q, z, z_err))
 
 print len(r), 'objects read'
 #print r
@@ -34,5 +35,8 @@ r = asarray(r)
 #data['fiber'] = r[:,3]
 #data['redshift'] = r[:,4]
 
-savetxt('results_august12', r, delimiter=' ', fmt='%s',
-    header=r'#cluster, tile, dither, fiber, Q, redshift, redshift_err')
+savetxt('results_august12',
+        r,
+        delimiter=' ',
+        fmt='%s',
+        header=r'#cluster, tile, dither, fiber, Q, redshift, redshift_err')

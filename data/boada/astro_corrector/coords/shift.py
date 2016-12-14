@@ -5,7 +5,6 @@ import glob
 
 files = glob.glob('*.txt')
 
-
 for f in files:
     #data = np.genfromtxt(sys.argv[1], dtype=str)
     data = np.genfromtxt(f, dtype=str)
@@ -13,9 +12,9 @@ for f in files:
     Ra_shift = 3.98858499
     Dec_shift = -0.79957
 
-    newf = open(f.rstrip('.txt')+'_corrected.txt','wt')
-    for fiber, ra, dec in zip(range(1,len(data[:,0])+1), data[:,1],
-        data[:,2]):
+    newf = open(f.rstrip('.txt') + '_corrected.txt', 'wt')
+    for fiber, ra, dec in zip(
+            range(1, len(data[:, 0]) + 1), data[:, 1], data[:, 2]):
         ra_deg = astCoords.hms2decimal(ra, ':')
         dec_deg = astCoords.dms2decimal(dec, ':')
         new_coords = astCoords.shiftRADec(ra_deg, dec_deg, Ra_shift, Dec_shift)

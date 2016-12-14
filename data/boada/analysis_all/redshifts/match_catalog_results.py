@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import sys
 
+
 def main(cluster):
     ''' This script matches the redshift measurements to the complete SDSS
     catalogs and spits out a new file that we can then use to start doing
@@ -10,12 +11,11 @@ def main(cluster):
     '''
 
     results = ['results_may12', 'results_august12', 'results_may13']
-    cat = pd.read_csv('./../catalogs/'+cluster+'_complete.csv')
+    cat = pd.read_csv('./../catalogs/' + cluster + '_complete.csv')
 
     for result in results:
         print result
-        redshifts_part = np.genfromtxt(result, names=True,
-                dtype=None)
+        redshifts_part = np.genfromtxt(result, names=True, dtype=None)
 
         # filter out for the cluster that we want
         mask = redshifts_part['cluster'] == cluster
@@ -27,8 +27,11 @@ def main(cluster):
         except NameError:
             redshifts = redshifts_part
 
-    merged = pd.merge(cat, redshifts, left_on=['tile', 'dither', 'fiber'],
-            right_on=['tile','dither','fiber'], how='outer')
+    merged = pd.merge(cat,
+                      redshifts,
+                      left_on=['tile', 'dither', 'fiber'],
+                      right_on=['tile', 'dither', 'fiber'],
+                      how='outer')
 
     try:
         del merged['index']
@@ -36,7 +39,9 @@ def main(cluster):
         #delete the first column
         del merged['Unnamed: 0']
 
-    merged.to_csv(cluster+'_redshifts.csv', index=False)
+    merged.to_csv(cluster + '_redshifts.csv', index=False)
+
+
 if __name__ == "__main__":
     cluster = sys.argv[1]
     main(cluster)

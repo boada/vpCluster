@@ -7,18 +7,20 @@ from calc_cluster_props import (updateArray, findClusterRedshift, findLOSV,
                                 findLOSVDmcmc, calc_mass_Evrard)
 import os
 
+
 class AsyncFactory:
     def __init__(self, func, cb_func):
         self.func = func
         self.cb_func = cb_func
         self.pool = Pool(maxtasksperchild=10)
 
-    def call(self,*args, **kwargs):
+    def call(self, *args, **kwargs):
         self.pool.apply_async(self.func, args, kwargs, self.cb_func)
 
     def wait(self):
         self.pool.close()
         self.pool.join()
+
 
 def worker(pos, data, center):
     #print "PID: %d \t Value: %d" % (os.getpid(), pos)
@@ -27,8 +29,9 @@ def worker(pos, data, center):
     #data = findSeperationSpatial(data, center)
     data = findLOSV(data)
     data, sigma_dist = findLOSVDmcmc(data)
-    data = calc_mass_Evrard(data, A1D = 1177, alpha = 0.364)
+    data = calc_mass_Evrard(data, A1D=1177, alpha=0.364)
     return pos, data, sigma_dist
+
 
 def cb_func((pos, data, sigma_dist)):
     if pos % 1000 == 0:
@@ -38,7 +41,8 @@ def cb_func((pos, data, sigma_dist)):
     results['LOSVD'][pos] = data['LOSVD'][0]
     results['MASS'][pos] = data['MASS'][0]
     results['LOSVD_err'][pos] = data['LOSVD_err'][0]
-    results['LOSVD_dist'][pos] = sigma_dist[:,0]
+    results['LOSVD_dist'][pos] = sigma_dist[:, 0]
+
 
 if __name__ == "__main__":
 
@@ -63,24 +67,21 @@ if __name__ == "__main__":
     gals = find_indices_multi(truth['HALOID'], halo['id'], subHalos)
 
     # make the results container
-    x = [i for i,g in enumerate(gals) if g.size >=5]
+    x = [i for i, g in enumerate(gals) if g.size >= 5]
     # make the results container
-    results = np.zeros((len(x),), dtype=[('IDX', '>i4'),
-        ('HALOID', '>i8'),
-        ('ZSPEC', '>f4'),
-        ('M200c', '>f4'),
-        ('CLUSZ', '>f4'),
-        ('LOSVD', '>f4'),
-        ('MASS', '>f4'),
-        ('NGAL', '>i4'),
-        ('LOSVD_err', '>f4', (2,)),
-        ('LOSVD_dist', '>f4', (10000,))])
+    results = np.zeros(
+        (len(x), ),
+        dtype=[('IDX', '>i4'), ('HALOID', '>i8'), ('ZSPEC', '>f4'),
+               ('M200c', '>f4'), ('CLUSZ', '>f4'), ('LOSVD', '>f4'),
+               ('MASS', '>f4'), ('NGAL', '>i4'), ('LOSVD_err', '>f4',
+                                                  (2, )), ('LOSVD_dist', '>f4',
+                                                           (10000, ))])
 
     print('do work', len(x), 'clusters to go!')
     keepBad = False
-    for j,i in enumerate(x):
+    for j, i in enumerate(x):
         center = (maskedHalo['ra'][uniqueIdx[i]],
-                maskedHalo['dec'][uniqueIdx[i]])
+                  maskedHalo['dec'][uniqueIdx[i]])
         if gals[i].size >= 5:
             async_worker.call(j, truth[gals[i]], center)
             # update results array
@@ -89,14 +90,14 @@ if __name__ == "__main__":
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
             # millenium cosmology
             #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
-            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
+            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]] / 0.70
         elif keepBad:
             results['HALOID'][j] = maskedHalo['id'][uniqueIdx[i]]
             results['NGAL'][j] = gals[i].size
             results['ZSPEC'][j] = maskedHalo['zspec'][uniqueIdx[i]]
             # millenium cosmology
             #results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.73
-            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]]/0.70
+            results['M200c'][j] = maskedHalo['m200c'][uniqueIdx[i]] / 0.70
 
     async_worker.wait()
 

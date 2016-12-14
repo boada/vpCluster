@@ -5,6 +5,7 @@ from astLib import astStats
 from astLib import astCoords
 import numpy as np
 
+
 def loadIFUSpectra(objectFileName):
     """ Loads in an object spectrum - this has to be in DEEP2 pipeline
     spec1d format (i.e. fits tables)
@@ -35,7 +36,7 @@ def loadIFUSpectra(objectFileName):
         print 'The ending wavelenghts do not match... Exiting'
         sys.exit(1)
     else:
-        sums = [sum(odata[i,:]) for i in range(odata.shape[0])]
+        sums = [sum(odata[i, :]) for i in range(odata.shape[0])]
         #find the median value of all the fibers
         med = astStats.clippedMedianStdev(sums)
         med = med['clippedMedian']
@@ -54,7 +55,7 @@ def loadIFUSpectra(objectFileName):
         # Mask out extreme values in spectrum
         # Just because edges dodgy in efosc
         med = np.median(oflux)
-        oflux[np.greater(abs(oflux), 10.0*med)] = 0.0001
+        oflux[np.greater(abs(oflux), 10.0 * med)] = 0.0001
 
         objSED = astSED.SED(wavelength=owavelengthRange, flux=oflux)
 
@@ -67,6 +68,7 @@ def loadIFUSpectra(objectFileName):
         RSS.append({'object': objSED, 'sky': skySED})
     return RSS
 
+
 def find_center(points, weights, star):
     x = [p[0] for p in points]
     y = [p[1] for p in points]
@@ -75,22 +77,26 @@ def find_center(points, weights, star):
     #print w
     print c
 
-    Ra_shift = astCoords.calcAngSepDeg(c[0],c[1],star[0],c[1])*3600
-    Dec_shift = astCoords.calcAngSepDeg(c[0],c[1],c[0],star[1])*3600
+    Ra_shift = astCoords.calcAngSepDeg(c[0], c[1], star[0], c[1]) * 3600
+    Dec_shift = astCoords.calcAngSepDeg(c[0], c[1], c[0], star[1]) * 3600
 
-# Need to shift to the South West, so make the shifts negative
-    new_coords = astCoords.shiftRADec(c[0], c[1], -1*Ra_shift, -1*Dec_shift)
+    # Need to shift to the South West, so make the shifts negative
+    new_coords = astCoords.shiftRADec(c[0], c[1], -1 * Ra_shift, -1 *
+                                      Dec_shift)
     print Ra_shift, Dec_shift
     print new_coords
+
 
 def mk_weights(fibers, RSS):
     w = []
     for f in fibers:
-        d = [flux for flux, wl in zip(RSS[246-f]['object'].flux,
-            RSS[246-f]['object'].wavelength) if 5000<wl<5010]
+        d = [flux
+             for flux, wl in zip(RSS[246 - f]['object'].flux, RSS[246 - f][
+                 'object'].wavelength) if 5000 < wl < 5010]
         w.append(sum(d))
 
     return w
+
 
 def load_coords(fibers, fiberPositions):
     # determines which fibers should be included and returns the fiber number
@@ -100,14 +106,16 @@ def load_coords(fibers, fiberPositions):
 
     temp = []
     for f in fibers:
-        ra = coords[f-1, 1]
-        dec = coords[f-1,2]
+        ra = coords[f - 1, 1]
+        dec = coords[f - 1, 2]
         ra_deg = astCoords.hms2decimal(ra, ':')
         dec_deg = astCoords.dms2decimal(dec, ':')
         #temp.append({'fiber':f, 'ra':ra_deg, 'dec':dec_deg})
         temp.append((ra_deg, dec_deg))
 
     return temp
+
+
 '''
 star = 191.11156, 16.80760
 fibersD1 = [150]
@@ -136,14 +144,16 @@ pointsD3 = load_coords(fibersD3,'./coords/XMMXCSJ124425.9+164758.0_SE_D3_coords.
 star = 191.11210, 16.79820
 fibersD1 = fibersD2 = [223, 237]
 fibersD3 = [222, 223]
-D1= './data/XMMXCSJ124425.9+164758.0_NE_1.fits'
-D2= './data/XMMXCSJ124425.9+164758.0_NE_2.fits'
-D3= './data/XMMXCSJ124425.9+164758.0_NE_3.fits'
+D1 = './data/XMMXCSJ124425.9+164758.0_NE_1.fits'
+D2 = './data/XMMXCSJ124425.9+164758.0_NE_2.fits'
+D3 = './data/XMMXCSJ124425.9+164758.0_NE_3.fits'
 
-pointsD1 = load_coords(fibersD1,'./coords/XMMXCSJ124425.9+164758.0_NE_D1_coords.txt')
-pointsD2 = load_coords(fibersD2,'./coords/XMMXCSJ124425.9+164758.0_NE_D2_coords.txt')
-pointsD3 = load_coords(fibersD3,'./coords/XMMXCSJ124425.9+164758.0_NE_D3_coords.txt')
-
+pointsD1 = load_coords(fibersD1,
+                       './coords/XMMXCSJ124425.9+164758.0_NE_D1_coords.txt')
+pointsD2 = load_coords(fibersD2,
+                       './coords/XMMXCSJ124425.9+164758.0_NE_D2_coords.txt')
+pointsD3 = load_coords(fibersD3,
+                       './coords/XMMXCSJ124425.9+164758.0_NE_D3_coords.txt')
 
 RSSD1 = loadIFUSpectra(D1)
 RSSD2 = loadIFUSpectra(D2)
@@ -153,6 +163,4 @@ wD1 = mk_weights(fibersD1, RSSD1)
 wD2 = mk_weights(fibersD2, RSSD2)
 wD3 = mk_weights(fibersD3, RSSD3)
 
-center = find_center(pointsD1 + pointsD2 + pointsD3, wD1+wD2+wD3, star)
-
-
+center = find_center(pointsD1 + pointsD2 + pointsD3, wD1 + wD2 + wD3, star)

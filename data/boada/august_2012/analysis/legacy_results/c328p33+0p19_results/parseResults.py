@@ -11,7 +11,7 @@ for f in files:
     data = genfromtxt(f, delimiter='\t', names=True, dtype=None)
     try:
         for fiber, z, Q in zip(data['Fiber'], data['Redshift'],
-                data['Quality']):
+                               data['Quality']):
             if Q == 0:
                 r.append((field, dither, fiber, z))
     except TypeError:

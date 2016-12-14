@@ -23,6 +23,7 @@ def findClusterCenterRedshift(data):
     #x = np.copy(data['redshift'].values)
     return ast.biweightLocation(x, tuningConstant=6.0)
 
+
 def findseparationSpatial(data, center):
     ''' Finds the distance to all of the galaxies from the center of the
     cluster in the spatial plane. Returns values in Mpc.
@@ -31,13 +32,14 @@ def findseparationSpatial(data, center):
 
     # Add a new column to the dataframe
     sepDeg = np.array(aco.calcAngSepDeg(center[0], center[1], data.ra.values,
-            data.dec.values))
-    da = np.array([aca.da(z)/57.2957795131 for z in data.redshift.values])
+                                        data.dec.values))
+    da = np.array([aca.da(z) / 57.2957795131 for z in data.redshift.values])
 
     sepMpc = da * sepDeg
     data.loc[:, 'separation'] = sepMpc
 
     return data
+
 
 def findLOSV(data, avgz):
     ''' Finds the line of sight velocity for each of the galaxies. Computes the
@@ -45,10 +47,10 @@ def findLOSV(data, avgz):
 
     '''
 
-    c = 2.99E5 # speed of light in km/s
+    c = 2.99E5  # speed of light in km/s
 
-    LOSV = c * (data.redshift.values - avgz)/ (1+avgz)
-    LOSV_err = c/(1+avgz) * data.redshift_err.values * 2
+    LOSV = c * (data.redshift.values - avgz) / (1 + avgz)
+    LOSV_err = c / (1 + avgz) * data.redshift_err.values * 2
 
     # Add a new column to the dataframe
     data.loc[:, 'LOSV'] = LOSV
@@ -56,14 +58,16 @@ def findLOSV(data, avgz):
 
     return data
 
+
 def split_list(alist, wanted_parts=1):
     ''' Breaks a list into a number of parts. If it does not divide evenly then
     the last list will have an extra element.
 
     '''
     length = len(alist)
-    return [ alist[i*length // wanted_parts: (i+1)*length // wanted_parts]
-        for i in range(wanted_parts) ]
+    return [alist[i * length // wanted_parts:(i + 1) * length // wanted_parts]
+            for i in range(wanted_parts)]
+
 
 def rejectInterlopers(data):
     ''' Does all of the work to figure out which galaxies don't belong. Makes
@@ -79,7 +83,7 @@ def rejectInterlopers(data):
     # make some copies so we can sort them around
     sepSorted = data.sort_values(by='separation', ascending=True)
     # How many parts to break into
-    parts = len(data)//10
+    parts = len(data) // 10
     splitData = split_list(sepSorted, parts)
 
     # Now we sort the parts by LOSV and find the rejects
@@ -102,11 +106,13 @@ def rejectInterlopers(data):
                 # Always take the more extreme index
                 for index, i in enumerate(indices[0]):
                     if (abs(LOSVsorted['LOSV'][LOSVsorted.index[i]]) -
-                        abs(LOSVsorted['LOSV'][LOSVsorted.index[i+1]])) > 0:
-                            pass
+                            abs(LOSVsorted['LOSV'][LOSVsorted.index[i + 1]])
+                        ) > 0:
+                        pass
                     elif (abs(LOSVsorted['LOSV'][LOSVsorted.index[i]]) -
-                        abs(LOSVsorted['LOSV'][LOSVsorted.index[i+1]])) < 0:
-                            indices[0][index] = i+1
+                          abs(LOSVsorted['LOSV'][LOSVsorted.index[i + 1]])
+                          ) < 0:
+                        indices[0][index] = i + 1
 
                 #print LOSVsorted.index[list(indices[0])]
                 dataframeIndex = list(LOSVsorted.index[list(indices[0])])
@@ -114,13 +120,14 @@ def rejectInterlopers(data):
                 interlopers += dataframeIndex
             else:
                 rejected = False
-    print 'interlopers',interlopers
+    print 'interlopers', interlopers
 
-    data.loc[interlopers,'interloper'] = 'YES'
+    data.loc[interlopers, 'interloper'] = 'YES'
 
     #return data.drop(interlopers)
     #return data_orig.update(data)
     data_orig.update(data)
+
 
 def shifty_gapper(r, z, zc, vlimit=10000, ngap=30, glimit=1000):
     '''Determine cluster membersip according to the shifty
@@ -150,44 +157,45 @@ def shifty_gapper(r, z, zc, vlimit=10000, ngap=30, glimit=1000):
 
     def z2v(z, zc):
         '''Convert the redshift to km/s relative to the cluster center '''
-        return 2.99792458e5*(z-zc)/(1+zc)
+        return 2.99792458e5 * (z - zc) / (1 + zc)
 
     #convert to the velocity scale
-    v = z2v(z,zc)
+    v = z2v(z, zc)
 
     #limit the source to only sources within the vlimit
     vmask = abs(v) < vlimit
 
-    nobj=len(r)
-    incluster=np.zeros(nobj, dtype=bool)
+    nobj = len(r)
+    incluster = np.zeros(nobj, dtype=bool)
 
-    if nobj<ngap:
-        raise Exception('Number of sources is less thant number of gap sources')
+    if nobj < ngap:
+        raise Exception(
+            'Number of sources is less thant number of gap sources')
 
     for i in range(nobj):
-        if abs(v[i])<vlimit:
+        if abs(v[i]) < vlimit:
             #find the ngap closest sources
-            r_j=abs(r[vmask]-r[i]).argsort()
-            vg=v[vmask][r_j[0:ngap]]
+            r_j = abs(r[vmask] - r[i]).argsort()
+            vg = v[vmask][r_j[0:ngap]]
 
             #find the sources with |v_pec| < |v_pec_i|
-            mask=abs(vg)<=abs(v[i])
-            if mask.sum()>1:
-                vg=vg[mask]
+            mask = abs(vg) <= abs(v[i])
+            if mask.sum() > 1:
+                vg = vg[mask]
                 #now sort these sources and find the biggest gap
                 vg.sort()
-                if np.diff(vg).max()<glimit: incluster[i]=True
+                if np.diff(vg).max() < glimit: incluster[i] = True
             else:
-                incluster[i]=True
+                incluster[i] = True
 
     return incluster
 
 
 def rejectInterlopers_group(data, avgz, sigmav=500):
 
-    c = 2.99E5 # speed of light in km/s
-    deltaZmax = 2 * sigmav * (1.+avgz) / c
-    deltaRmax = (c * deltaZmax)/(9.5*aca.H0*aca.Ez(avgz)) # Mpc
+    c = 2.99E5  # speed of light in km/s
+    deltaZmax = 2 * sigmav * (1. + avgz) / c
+    deltaRmax = (c * deltaZmax) / (9.5 * aca.H0 * aca.Ez(avgz))  # Mpc
     #deltaThetamax = 206265 * deltaRmax * aca.da(avgz) #arcseconds
 
     # make redshift cut
@@ -196,11 +204,12 @@ def rejectInterlopers_group(data, avgz, sigmav=500):
     #data = data[abs(data.redshift - avgz) <= deltaZmax]
 
     # make spatial cut
-    data.loc[data.separation >=deltaRmax, 'interloper'] = 'YES'
+    data.loc[data.separation >= deltaRmax, 'interloper'] = 'YES'
     #data.interloper[data.separation >=deltaRmax] = 'YES'
     #data = data[data.separation <= deltaRmax]
 
     return data
+
 
 if __name__ == "__main__":
     ''' This script does the interlop rejection of the redshift catalogs.
@@ -222,10 +231,10 @@ if __name__ == "__main__":
 
     for c in clusters:
         print c
-        catalog = './../redshifts/'+c+'_redshifts.csv'
+        catalog = './../redshifts/' + c + '_redshifts.csv'
         print catalog
         # get the center
-        with open('./../centers/'+c+'_center.list', 'r') as f:
+        with open('./../centers/' + c + '_center.list', 'r') as f:
             line = f.read()
         line = line.split(' ')
         center = float(line[0]), float(line[1])
@@ -257,7 +266,10 @@ if __name__ == "__main__":
                     losv = findLOSV(separated, avgz)
 
                 mask = shifty_gapper(losv.separation.values,
-                        losv.redshift.values, avgz, ngap=20, vlimit=5000)
+                                     losv.redshift.values,
+                                     avgz,
+                                     ngap=20,
+                                     vlimit=5000)
                 #rejectInterlopers(losv)
                 losv.loc[~mask, 'interloper'] = 'YES'
                 cleaned = losv

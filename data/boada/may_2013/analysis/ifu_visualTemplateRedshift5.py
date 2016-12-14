@@ -84,41 +84,18 @@ templateLabels = [
 # List of spectral line labels and wavelengths
 # Unlike the old style scripts, these don't need unique labels/names
 spectralFeaturesCatalogue = [
-    ["Halpha", 6562.8],
-    ["Hbeta", 4861.33],
-    ["Hgamma", 4340.50],
-    ["Hdelta", 4101.70],
-    ["Hepsilon", 3970.10],
-    ["Htheta", 3798.6],
-    ["Hzeta", 3888.9],
-    ["HeI", 4471.5, 5875.6],
-    ["HeII", 4338.6, 4685.70],
-    ["Lyalpha", 1216.0],
-    ["CII", 1335.30],
-    ["CIV", 1549.0],
-    ["[NII]", 6548.1, 6583.4],
-    ["NV", 1240.14],
-    ["OI", 1304.3],
-    ["[OI]", 6300.3],
-    ["[OII]", 2471.03, 3727.3],
-    ["OIII", 2672.04],
-    ["[OIII]", 4958.91, 5006.84],
-    ["OIV]", 1402.06],
-    ["[NeIII]", 3967.5],
-    ["[NeIV]", 1602.0, 2423.83],
-    ["[NeV]", 1575.0, 3426.0],
-    ["MgI", 2852.0, 3830.4, 5175.4],
-    ["MgII", 2800.0, 2803.0, 2798.0],
-    ["AlII]", 2669.95],
-    ["SiII", 1262.59, 1306.82],
-    ["SiIV", 1396.76],
-    ["[SII]", 6717.0, 6731.3],
-    ["CaI", 4226.7],
-    ["H", 3968.47],
-    ["K", 3933.68],
-    ["G", 4307.74],
-    ["E", 5269.00],
-    ["FeI", 4045.8, 4271.7, 4329.7, 4045.8],
+    ["Halpha", 6562.8], ["Hbeta", 4861.33], ["Hgamma", 4340.50],
+    ["Hdelta", 4101.70], ["Hepsilon", 3970.10], ["Htheta", 3798.6],
+    ["Hzeta", 3888.9], ["HeI", 4471.5, 5875.6], ["HeII", 4338.6, 4685.70],
+    ["Lyalpha", 1216.0], ["CII", 1335.30], ["CIV", 1549.0],
+    ["[NII]", 6548.1, 6583.4], ["NV", 1240.14], ["OI", 1304.3],
+    ["[OI]", 6300.3], ["[OII]", 2471.03, 3727.3], ["OIII", 2672.04],
+    ["[OIII]", 4958.91, 5006.84], ["OIV]", 1402.06], ["[NeIII]", 3967.5],
+    ["[NeIV]", 1602.0, 2423.83], ["[NeV]", 1575.0, 3426.0],
+    ["MgI", 2852.0, 3830.4, 5175.4], ["MgII", 2800.0, 2803.0, 2798.0],
+    ["AlII]", 2669.95], ["SiII", 1262.59, 1306.82], ["SiIV", 1396.76],
+    ["[SII]", 6717.0, 6731.3], ["CaI", 4226.7], ["H", 3968.47], ["K", 3933.68],
+    ["G", 4307.74], ["E", 5269.00], ["FeI", 4045.8, 4271.7, 4329.7, 4045.8],
     ["FeII", 2344.0, 2374.0, 2382.0, 2586.0, 2600.0]
 ]
 
@@ -212,8 +189,8 @@ class App:
         self.outPathLabel.grid(row=0, column=2)
         self.outPathEntryVar = Tkinter.StringVar()
         self.outPathEntryVar.set(self.outDir + os.path.sep +
-                                 self.objectSpecFileName.replace(
-                                     ".fits", ".png"))
+                                 self.objectSpecFileName.replace(".fits",
+                                                                 ".png"))
         self.outPathEntry = Tkinter.Entry(self.buttonFrame,
                                           textvariable=self.outPathEntryVar,
                                           width=80)
@@ -221,11 +198,13 @@ class App:
 
         self.nextButton = Tkinter.Button(self.buttonFrame,
                                          text="Log",
-                                         bg="blue", command=self.log)
+                                         bg="blue",
+                                         command=self.log)
         self.nextButton.grid(row=0, column=6)
 
         self.quitButton = Tkinter.Button(self.buttonFrame,
-                                         text="QUIT", bg="red",
+                                         text="QUIT",
+                                         bg="red",
                                          command=self.buttonFrame.quit)
         self.quitButton.grid(row=0, column=7)
 
@@ -237,12 +216,12 @@ class App:
                                           anchor=Tkinter.E)
         self.qualityLabel.grid(row=2, column=0)
         for i in range(4):
-            self.qualityRadioList.append(
-                Tkinter.Radiobutton(self.qualityFrame,
-                                    text=str(i),
-                                    variable=self.qualityRadioVar,
-                                    value=i,
-                                    command=self.redrawPlot))
+            self.qualityRadioList.append(Tkinter.Radiobutton(
+                self.qualityFrame,
+                text=str(i),
+                variable=self.qualityRadioVar,
+                value=i,
+                command=self.redrawPlot))
             self.qualityRadioList[-1].grid(row=2, column=i + 1)
         self.qualityRadioList[0].select()
 
@@ -265,7 +244,9 @@ class App:
         self.fibernumberLabel.grid(row=1, column=0)
         self.fibernumberScale = Tkinter.Scale(self.fiberFrame,
                                               orient=Tkinter.HORIZONTAL,
-                                              length=300, from_=1, to=246,
+                                              length=300,
+                                              from_=1,
+                                              to=246,
                                               tickinterval=60,
                                               command=None,
                                               variable=self.fibernumberVar,
@@ -274,9 +255,9 @@ class App:
         self.fibernumberScale.grid(row=1, column=1, columnspan=3)
 
         # Buttons to finely tune the fiber number
-        self.fibernumberMinusButton = Tkinter.Button(self.fiberFrame,
-                                                     text="-",
-                                                     command=self.decreaseFiber)
+        self.fibernumberMinusButton = Tkinter.Button(
+            self.fiberFrame,
+            text="-", command=self.decreaseFiber)
         self.fibernumberMinusButton.grid(row=1, column=4)
         self.fibernumberPlusButton = Tkinter.Button(self.fiberFrame,
                                                     text="+",
@@ -286,7 +267,9 @@ class App:
         # Checkbox to set fiber as sky
         self.ignoreEmission = Tkinter.IntVar()
         self.ignoreEmissionLabel = Tkinter.Label(self.fiberFrame,
-                            text="Ignore Emission", width=15, anchor=Tkinter.E)
+                                                 text="Ignore Emission",
+                                                 width=15,
+                                                 anchor=Tkinter.E)
         self.ignoreEmissionLabel.grid(row=1, column=10)
         self.ignoreEmissionCheckButton = Tkinter.Checkbutton(
             self.fiberFrame,
@@ -302,7 +285,9 @@ class App:
         self.smoothLabel.grid(row=1, column=0)
         self.smoothScale = Tkinter.Scale(self.smoothFrame,
                                          orient=Tkinter.HORIZONTAL,
-                                         length=300, from_=0, to=100,
+                                         length=300,
+                                         from_=0,
+                                         to=100,
                                          tickinterval=25,
                                          command=self.smoothSpectrum,
                                          variable=self.smoothScaleVar,
@@ -311,17 +296,19 @@ class App:
         # Initial Smoothing
         self.smoothScale.set(5)
         x = self.smoothScale.get()
-        self.objSED = self.obj[246-self.fibernumberScale.get()]['object']
+        self.objSED = self.obj[246 - self.fibernumberScale.get()]['object']
         self.unsmoothedObjFlux = self.objSED.flux[:]
         self.objSED.flux = self.unsmoothedObjFlux[:]
         self.objSED.smooth(x)
         self.smoothScale.grid(row=1, column=1, columnspan=3)
 
         # Buttons to finely tune the smoothing
-        self.smoothPlusButton = Tkinter.Button(self.smoothFrame, text="+",
+        self.smoothPlusButton = Tkinter.Button(self.smoothFrame,
+                                               text="+",
                                                command=self.increaseSmoothing)
         self.smoothPlusButton.grid(row=1, column=5)
-        self.smoothMinusButton = Tkinter.Button(self.smoothFrame, text="-",
+        self.smoothMinusButton = Tkinter.Button(self.smoothFrame,
+                                                text="-",
                                                 command=self.decreaseSmoothing)
         self.smoothMinusButton.grid(row=1, column=4)
 
@@ -334,7 +321,8 @@ class App:
         self.minWavelengthEntryVar.set("4500")
         self.minWavelengthEntry = Tkinter.Entry(
             self.smoothFrame,
-            textvariable=self.minWavelengthEntryVar, width=6)
+            textvariable=self.minWavelengthEntryVar,
+            width=6)
         self.minWavelengthEntry.grid(row=1, column=7)
 
         self.maxWavelengthLabel = Tkinter.Label(self.smoothFrame,
@@ -345,23 +333,29 @@ class App:
         self.maxWavelengthEntryVar.set("6500")
         self.maxWavelengthEntry = Tkinter.Entry(
             self.smoothFrame,
-            textvariable=self.maxWavelengthEntryVar, width=6)
+            textvariable=self.maxWavelengthEntryVar,
+            width=6)
         self.maxWavelengthEntry.grid(row=1, column=9)
 
         # Alt normalisation method
         self.altNormCheckVar = Tkinter.IntVar()
-        self.altNormLabel = Tkinter.Label(self.smoothFrame, text="Alt norm",
-                                          width=10, anchor=Tkinter.E)
+        self.altNormLabel = Tkinter.Label(self.smoothFrame,
+                                          text="Alt norm",
+                                          width=10,
+                                          anchor=Tkinter.E)
         self.altNormLabel.grid(row=1, column=10)
         self.altNormCheckButton = Tkinter.Checkbutton(
             self.smoothFrame,
-            variable=self.altNormCheckVar, command=self.plotSkyChanged)
+            variable=self.altNormCheckVar,
+            command=self.plotSkyChanged)
         self.altNormCheckButton.grid(row=1, column=11)
 
         # Turn sky plotting on/off
         self.plotSkyCheckVar = Tkinter.IntVar()
-        self.plotSkyLabel = Tkinter.Label(self.smoothFrame, text="Plot sky",
-                                          width=10, anchor=Tkinter.E)
+        self.plotSkyLabel = Tkinter.Label(self.smoothFrame,
+                                          text="Plot sky",
+                                          width=10,
+                                          anchor=Tkinter.E)
         self.plotSkyLabel.grid(row=1, column=12)
         self.plotSkyCheckButton = Tkinter.Checkbutton(
             self.smoothFrame,
@@ -373,7 +367,8 @@ class App:
         # Radio buttons used to select template
         self.templateRadioVar = Tkinter.IntVar()
         self.templateRadioList = []
-        self.templateLabel = Tkinter.Label(templatesFrame, text="Template:",
+        self.templateLabel = Tkinter.Label(templatesFrame,
+                                           text="Template:",
                                            anchor=Tkinter.E)
         self.templateLabel.grid(row=2, column=0)
 
@@ -400,7 +395,9 @@ class App:
         self.redshiftLabel.grid(row=3, column=0)
         self.redshiftScale = Tkinter.Scale(scaleFrame,
                                            orient=Tkinter.HORIZONTAL,
-                                           length=600, from_=0.0, to=2.01,
+                                           length=600,
+                                           from_=0.0,
+                                           to=2.01,
                                            tickinterval=1,
                                            command=self.getRedshiftScaleValue,
                                            variable=self.redshiftScaleVar,
@@ -409,11 +406,13 @@ class App:
         self.redshiftScale.grid(row=3, column=1, columnspan=3)
 
         # Buttons to finely tune the trial redshift
-        self.redshiftPlusButton = Tkinter.Button(scaleFrame, text="+",
+        self.redshiftPlusButton = Tkinter.Button(scaleFrame,
+                                                 text="+",
                                                  command=self.increaseRedshift)
         self.redshiftPlusButton.grid(row=3, column=5)
-        self.redshiftMinusButton = Tkinter.Button(scaleFrame, text="-",
-                                                  command=self.decreaseRedshift)
+        self.redshiftMinusButton = Tkinter.Button(
+            scaleFrame, text="-",
+            command=self.decreaseRedshift)
         self.redshiftMinusButton.grid(row=3, column=4)
 
         # Redshift uncertainty entry box
@@ -428,11 +427,13 @@ class App:
         self.redshiftErrorEntry.grid(row=3, column=7)
 
         # XCSAO button
-        self.runXCSAOButton = Tkinter.Button(scaleFrame, text="XC galaxies",
+        self.runXCSAOButton = Tkinter.Button(scaleFrame,
+                                             text="XC galaxies",
                                              command=self.runXCSAOGalaxies,
                                              fg="green")
         self.runXCSAOButton.grid(row=3, column=8)
-        self.runXCSAOButton = Tkinter.Button(scaleFrame, text="XC QSOs",
+        self.runXCSAOButton = Tkinter.Button(scaleFrame,
+                                             text="XC QSOs",
                                              command=self.runXCSAOQSOs,
                                              fg="green")
         self.runXCSAOButton.grid(row=3, column=9)
@@ -467,14 +468,12 @@ class App:
         pylab.figure(figsize=(12, 8))
 
         # Do initial plot
-        self.updatePlot(self.obj[246-self.fibernumberScale.get()]['object'],
+        self.updatePlot(self.obj[246 - self.fibernumberScale.get()]['object'],
                         self.templates[self.templateRadioVar.get()],
-                        self.obj[246-self.fibernumberScale.get()]['sky'],
-                        self.redshiftScaleVar.get(),
-                        tempLabel=os.path.split(templateLabels[
-                            self.templateRadioVar.get()])[-1],
-                        redrawSky=True,
-                        redrawFeatures=True,
+                        self.obj[246 - self.fibernumberScale.get()]['sky'],
+                        self.redshiftScaleVar.get(), tempLabel=os.path.split(
+                            templateLabels[self.templateRadioVar.get()])[-1],
+                        redrawSky=True, redrawFeatures=True,
                         plotFeatures=self.plotFeatures)
 
 #        self.updatePlot(self.objSED,
@@ -487,14 +486,15 @@ class App:
 #                        redrawFeatures=True,
 #                        plotFeatures=self.plotFeatures)
 
-    #########################
-    ### END OF APP LAYOUT ###
-    #########################
+#########################
+### END OF APP LAYOUT ###
+#########################
+
     def smoothSpectrum(self, event):
         """ Smooths the object spectrum when the smooth slider is updated
 
         """
-        self.objSED = self.obj[246-self.fibernumberScale.get()]['object']
+        self.objSED = self.obj[246 - self.fibernumberScale.get()]['object']
         #self.unsmoothedObjFlux = self.objSED.flux[:]
         #self.objSED.flux = self.unsmoothedObjFlux[:]
         self.objSED.smooth(self.smoothScale.get())
@@ -512,14 +512,12 @@ class App:
         self.smoothScale.set(self.smoothScaleVar.get() - 1)
 
     def changeFiber(self):
-        self.updatePlot(self.obj[246-self.fibernumberScale.get()]['object'],
+        self.updatePlot(self.obj[246 - self.fibernumberScale.get()]['object'],
                         self.templates[self.templateRadioVar.get()],
-                        self.obj[246-self.fibernumberScale.get()]['sky'],
-                        self.redshiftScaleVar.get(),
-                        tempLabel=os.path.split(templateLabels[
-                            self.templateRadioVar.get()])[-1],
-                        redrawSky=True,
-                        redrawFeatures=True,
+                        self.obj[246 - self.fibernumberScale.get()]['sky'],
+                        self.redshiftScaleVar.get(), tempLabel=os.path.split(
+                            templateLabels[self.templateRadioVar.get()])[-1],
+                        redrawSky=True, redrawFeatures=True,
                         plotFeatures=self.plotFeatures)
 
     def increaseFiber(self):
@@ -527,10 +525,9 @@ class App:
 
         """
         self.fibernumberScale.set(self.fibernumberVar.get() + 1)
-        self.outPathEntryVar.set(self.outDir + os.path.sep +
-                                 self.objectSpecFileName.rstrip(".fits") +
-                                 '_' + str(self.fibernumberScale.get()) +
-                                 '.png')
+        self.outPathEntryVar.set(
+            self.outDir + os.path.sep + self.objectSpecFileName.rstrip(
+                ".fits") + '_' + str(self.fibernumberScale.get()) + '.png')
         self.changeFiber()
 
     def decreaseFiber(self):
@@ -538,10 +535,9 @@ class App:
 
         """
         self.fibernumberScale.set(self.fibernumberVar.get() - 1)
-        self.outPathEntryVar.set(self.outDir + os.path.sep +
-                                 self.objectSpecFileName.rstrip(".fits") +
-                                 '_' + str(self.fibernumberScale.get()) +
-                                 '.png')
+        self.outPathEntryVar.set(
+            self.outDir + os.path.sep + self.objectSpecFileName.rstrip(
+                ".fits") + '_' + str(self.fibernumberScale.get()) + '.png')
         self.changeFiber()
 
     def resetFeatures(self):
@@ -639,7 +635,7 @@ class App:
                 self.convertToIRAFFormat():
             print "--> cross correlating " + irafFileName + " ..."
 
-            self.skySED = self.obj[246-self.fibernumberScale.get()]['sky']
+            self.skySED = self.obj[246 - self.fibernumberScale.get()]['sky']
 
             # Mask prominent sky emission lines
             if self.skySED is None:
@@ -678,7 +674,7 @@ class App:
                             lastPix = max(badPix)
                         lines.append([badPix[i], lastPix])
                     #outFile=file("/opt/iraf_extras/rvsao-2.8.1/lib/badlines.dat",
-                #        "w")
+                    #        "w")
                 outFile = file("badlines.dat", "w")
                 for line in lines:
                     print('Badlines updated')
@@ -729,10 +725,10 @@ class App:
             self.redshiftScaleVar.set(result['z'])
             self.commentsEntryVar.set("XCSAO (R=%.3f): " % (result['RVal']))
             self.commentsEntry['textvariable'] = self.commentsEntryVar
-            self.templateRadioVar.set(
-                templateFileNames.index(result['template']))
-            self.templateRadioList[
-                templateFileNames.index(result['template'])].select()
+            self.templateRadioVar.set(templateFileNames.index(result[
+                'template']))
+            self.templateRadioList[templateFileNames.index(result[
+                'template'])].select()
             self.commentsEntry.update()
             self.redshiftErrorEntryVar.set("%.6f" % (result['zErr']))
             print result
@@ -774,12 +770,12 @@ class App:
 
         #idlfits = pyfits.open(self.objectFileName)
 
-        fluxData = self.obj[246-self.fibernumberScale.get()]['object'].flux
+        fluxData = self.obj[246 - self.fibernumberScale.get()]['object'].flux
         wavelengthData =\
         self.obj[246-self.fibernumberScale.get()]['object'].wavelength
-        skyData = self.obj[246-self.fibernumberScale.get()]['sky'].flux
+        skyData = self.obj[246 - self.fibernumberScale.get()]['sky'].flux
 
-        print 246-self.fibernumberScale.get()
+        print 246 - self.fibernumberScale.get()
         print fluxData.mean()
 
         #if fluxData.mean() < 100:
@@ -787,10 +783,10 @@ class App:
         plotData = []
         skyPlotData = []
         for i in range(len(fluxData)):
-            writer.write(str(
-                wavelengthData[i]) + "\t" + str(fluxData[i]) + "\n")
-            skyWriter.write(str(
-                wavelengthData[i])+"\t"+str(skyData[i])+"\n")
+            writer.write(str(wavelengthData[i]) + "\t" + str(fluxData[i]) +
+                         "\n")
+            skyWriter.write(str(wavelengthData[i]) + "\t" + str(skyData[i]) +
+                            "\n")
             plotData.append([wavelengthData[i], fluxData[i]])
             skyPlotData.append([wavelengthData[i], skyData[i]])
         writer.close()
@@ -836,11 +832,14 @@ class App:
             try:
                 onedspec.rspectext(input=outFileName,
                                    output=outFileName.replace(".csv", ".fits"),
-                                   flux="no", dtype="interp")
-                onedspec.rspectext(input=outFileName.replace("iraf_",
-                        "sky_iraf_"), output=outFileName.replace("iraf_",
-                        "sky_iraf_").rstrip("csv")+"fits", flux="no",
-                        dtype="interp")
+                                   flux="no",
+                                   dtype="interp")
+                onedspec.rspectext(
+                    input=outFileName.replace("iraf_", "sky_iraf_"),
+                    output=outFileName.replace(
+                        "iraf_", "sky_iraf_").rstrip("csv") + "fits",
+                    flux="no",
+                    dtype="interp")
                 #del sys.modules['pyraf']
                 #del sys.modules['pyraf.iraf']
                 return True
@@ -873,7 +872,7 @@ class App:
             if objectChanged:
                 objectList.append(currentObject)
                 # Extract results -- if we asked to ignore any templates it's done
-            # here
+                # here
             if line.find("CZ:") != -1:
                 bits = line.split()
                 result = {}
@@ -913,7 +912,7 @@ class App:
             tc0 = th['COEFF0']
             tc1 = th['COEFF1']
             tpixRange = numpy.arange(timg[0].data.shape[1])
-            twavelengthRange = 10.0 ** (tc0 + tc1 * tpixRange)
+            twavelengthRange = 10.0**(tc0 + tc1 * tpixRange)
 
             tempSED = astSED.SED(wavelength=twavelengthRange,
                                  flux=timg[0].data[0])
@@ -940,12 +939,12 @@ class App:
                             float(self.redshiftErrorEntryVar.get()),
                             self.qualityRadioVar.get(),
                             self.commentsEntryVar.get()))
-#        else:
-#            self.outFile.write("%s\t%s\t%s\t%d\t%s\n" % \
-#                               (self.objectSpecFileNames[
-#                                   self.currentSpecFileIndex],
-#                                "None", "None", self.qualityRadioVar.get(),
-#                                self.commentsEntryVar.get()))
+        #        else:
+        #            self.outFile.write("%s\t%s\t%s\t%d\t%s\n" % \
+        #                               (self.objectSpecFileNames[
+        #                                   self.currentSpecFileIndex],
+        #                                "None", "None", self.qualityRadioVar.get(),
+        #                                self.commentsEntryVar.get()))
 
         self.outFile.close()
         print('Logged %s' % self.fibernumberScale.get())
@@ -1023,7 +1022,7 @@ class App:
             print 'The ending wavelenghts do not match... Exiting'
             sys.exit(1)
         else:
-            sums = [sum(odata[i,:]) for i in range(odata.shape[0])]
+            sums = [sum(odata[i, :]) for i in range(odata.shape[0])]
             #find the median value of all the fibers
             med = astStats.clippedMedianStdev(sums)
             med = med['clippedMedian']
@@ -1043,7 +1042,7 @@ class App:
             # Mask out extreme values in spectrum
             # Just because edges dodgy in efosc
             med = numpy.median(oflux)
-            oflux[numpy.greater(abs(oflux), 10.0*med)] = 0.0001
+            oflux[numpy.greater(abs(oflux), 10.0 * med)] = 0.0001
 
             objSED = astSED.SED(wavelength=owavelengthRange, flux=oflux)
 
@@ -1081,8 +1080,8 @@ class App:
             bwavelengthRange = oimg['HORNE-B'].data.field('LAMBDA')[0]
             bflux = oimg['HORNE-B'].data.field('SPEC')[0]
             bskyflux = oimg['HORNE-B'].data.field('SKYSPEC')[0]
-            owavelengthRange = numpy.array(
-                bwavelengthRange.tolist() + rwavelengthRange.tolist())
+            owavelengthRange = numpy.array(bwavelengthRange.tolist() +
+                                           rwavelengthRange.tolist())
             oflux = numpy.array(bflux.tolist() + rflux.tolist())
             oskyflux = numpy.array(bskyflux.tolist() + rskyflux.tolist())
         except:
@@ -1090,9 +1089,9 @@ class App:
             # oflux = oimg['1D_SPECTRUM'].data.field('SPEC')
             # columnNames = oimg['1D_SPECTRUM'].columns.names
             # if 'SKYSPEC' in columnNames:
-                # oskyflux = oimg['1D_SPECTRUM'].data.field('SKYSPEC')
+            # oskyflux = oimg['1D_SPECTRUM'].data.field('SKYSPEC')
             #else:
-                # oskyflux = None
+            # oskyflux = None
 
             owavelengthRange = oimg[1].data.field('LAMBDA')
             oflux = oimg[1].data.field('SPEC')
@@ -1163,24 +1162,32 @@ class App:
                     else:
                         lastPix = max(badPix)
                     #append the lines and add a little padding
-                    lines.append([badPix[i]-5, lastPix+5])
+                    lines.append([badPix[i] - 5, lastPix + 5])
 
             for line in lines:
                 # Do a simple linear fit to the end points
-                y = objSED.flux[line[1]+5] - objSED.flux[line[0]-5]
-                x = skySED.wavelength[line[1]+5] - skySED.wavelength[line[0]-5]
-                slope = y/x
+                y = objSED.flux[line[1] + 5] - objSED.flux[line[0] - 5]
+                x = skySED.wavelength[line[1] + 5] - skySED.wavelength[line[0]
+                                                                       - 5]
+                slope = y / x
                 intercept = objSED.flux[line[0]-5] - slope *\
                     skySED.wavelength[line[0]-5]
-#                print skySED.wavelength[line[0]], skySED.wavelength[line[1]]
+                #                print skySED.wavelength[line[0]], skySED.wavelength[line[1]]
 
-                for i in range(line[0]-5, line[1]+5):
+                for i in range(line[0] - 5, line[1] + 5):
                     objSED.flux[i] = slope * skySED.wavelength[i] + intercept
 
             return objSED
 
-    def updatePlot(self, objSED, tempSED, skySED, redshift, tempLabel=None,
-                   redrawSky=True, redrawFeatures=False, plotFeatures=[]):
+    def updatePlot(self,
+                   objSED,
+                   tempSED,
+                   skySED,
+                   redshift,
+                   tempLabel=None,
+                   redrawSky=True,
+                   redrawFeatures=False,
+                   plotFeatures=[]):
         """ Updates the pylab plot of the object spectrum with template
         overlaid.
 
@@ -1214,8 +1221,8 @@ class App:
         # and object spectrum
         # Ignore XX% of each end of spectrum as edges can be weird
         if self.altNormCheckVar.get() == 1:
-            ignoreAngstroms = (objSED.wavelength.max() -
-                               objSED.wavelength.min()) * 0.25
+            ignoreAngstroms = (
+                objSED.wavelength.max() - objSED.wavelength.min()) * 0.25
             dw = 100
             binEdges = numpy.arange(objSED.wavelength.min() + ignoreAngstroms,
                                     objSED.wavelength.max() - ignoreAngstroms,
@@ -1226,7 +1233,8 @@ class App:
             objSEDDict = objSED.getSEDDict(passbands)
             tempSEDDict = tempSED.getSEDDict(passbands)
             norm0 = 1.0
-            norm, success = optimize.leastsq(fitSEDNormErrFunc, norm0,
+            norm, success = optimize.leastsq(fitSEDNormErrFunc,
+                                             norm0,
                                              args=(tempSEDDict['flux'],
                                                    objSEDDict['flux']))
             objSED.flux = objSED.flux / norm
@@ -1234,17 +1242,20 @@ class App:
             #if skySED != None and self.plotSkyCheckVar.get() == 1:
             #pylab.subplot(211)
         pylab.cla()
-        pylab.title(self.objectSpecFileName+' Fiber No. ' +
-                str(self.fibernumberScale.get()))
+        pylab.title(self.objectSpecFileName + ' Fiber No. ' + str(
+            self.fibernumberScale.get()))
         pylab.plot(objSED.wavelength, objSED.flux, 'k-')
         pylab.plot(tempSED.wavelength, tempSED.flux, 'r-', label=tempLabel)
-        pylab.text(0.05, 0.92, "z = %.5f $\pm$ %.5f (Q = %s)" %
-                               (tempSED.z,
-                                float(self.redshiftErrorEntryVar.get()),
-                                self.qualityRadioVar.get()),
+        pylab.text(0.05,
+                   0.92,
+                   "z = %.5f $\pm$ %.5f (Q = %s)" %
+                   (tempSED.z, float(self.redshiftErrorEntryVar.get()),
+                    self.qualityRadioVar.get()),
                    ha='left',
                    va='top',
-                   transform=pylab.gca().transAxes, size=12, color='r')
+                   transform=pylab.gca().transAxes,
+                   size=12,
+                   color='r')
 
         pylab.ylim(0, 1.2)
 
@@ -1262,26 +1273,24 @@ class App:
                 if on == 1:
                     featureLabel = item[0]
                     # Greek letters? eta will cause a problem here!
-                    featureLabel = featureLabel.replace("alpha",
-                                                        "$\\alpha$")
-                    featureLabel = featureLabel.replace("beta",
-                                                        "$\\beta$")
-                    featureLabel = featureLabel.replace("gamma",
-                                                        "$\gamma$")
-                    featureLabel = featureLabel.replace("delta",
-                                                        "$\delta$")
+                    featureLabel = featureLabel.replace("alpha", "$\\alpha$")
+                    featureLabel = featureLabel.replace("beta", "$\\beta$")
+                    featureLabel = featureLabel.replace("gamma", "$\gamma$")
+                    featureLabel = featureLabel.replace("delta", "$\delta$")
                     featureLabel = featureLabel.replace("epsilon",
                                                         "$\\epsilon$")
-                    featureLabel = featureLabel.replace("zeta",
-                                                        "$\zeta$")
-                    featureLabel = featureLabel.replace("theta",
-                                                        "$\\theta$")
+                    featureLabel = featureLabel.replace("zeta", "$\zeta$")
+                    featureLabel = featureLabel.replace("theta", "$\\theta$")
                     for i in range(1, len(item)):
                         featureLambda = (1.0 + float(redshift)) * item[i]
                         pylab.plot((featureLambda, featureLambda), (0, 0.95),
                                    'g--')
-                        pylab.text(featureLambda, 1.06, featureLabel,
-                                   ha='center', va='top', size=11,
+                        pylab.text(featureLambda,
+                                   1.06,
+                                   featureLabel,
+                                   ha='center',
+                                   va='top',
+                                   size=11,
                                    rotation='vertical')
 
         if redrawSky and self.plotSkyCheckVar.get() == 1:
@@ -1290,28 +1299,43 @@ class App:
 #                pylab.plot(skySED.wavelength,
 #                           skySED.flux / skySED.flux.max() * 0.3, 'b-',
 #                           label='Sky')
-            # Main telluric absorption features
-            c = patches.Rectangle((5567, 0), (20), 1.2, fill=True,
+# Main telluric absorption features
+            c = patches.Rectangle((5567, 0), (20),
+                                  1.2,
+                                  fill=True,
                                   edgecolor=(0.8, 0.8, 0.8),
-                                  facecolor=(0.8, 0.8, 0.8), linewidth=1,
+                                  facecolor=(0.8, 0.8, 0.8),
+                                  linewidth=1,
                                   label='Sky Line')
-#            pylab.gca().add_patch(c)
-            c = patches.Rectangle((5881, 0), (20), 1.2, fill=True,
+            #            pylab.gca().add_patch(c)
+            c = patches.Rectangle((5881, 0), (20),
+                                  1.2,
+                                  fill=True,
                                   edgecolor=(0.8, 0.8, 0.8),
-                                  facecolor=(0.8, 0.8, 0.8), linewidth=1,
+                                  facecolor=(0.8, 0.8, 0.8),
+                                  linewidth=1,
                                   label='Sky Line')
             pylab.gca().add_patch(c)
-            c = patches.Rectangle((6293, 0), (20), 1.2, fill=True,
+            c = patches.Rectangle((6293, 0), (20),
+                                  1.2,
+                                  fill=True,
                                   edgecolor=(0.8, 0.8, 0.8),
-                                  facecolor=(0.8, 0.8, 0.8), linewidth=1)
+                                  facecolor=(0.8, 0.8, 0.8),
+                                  linewidth=1)
             pylab.gca().add_patch(c)
-            c = patches.Rectangle((6860, 0), (6930 - 6860), 1.2, fill=True,
+            c = patches.Rectangle((6860, 0), (6930 - 6860),
+                                  1.2,
+                                  fill=True,
                                   edgecolor=(0.8, 0.8, 0.8),
-                                  facecolor=(0.8, 0.8, 0.8), linewidth=1)
+                                  facecolor=(0.8, 0.8, 0.8),
+                                  linewidth=1)
             pylab.gca().add_patch(c)
-            c = patches.Rectangle((7590, 0), (7710 - 7590), 1.2, fill=True,
+            c = patches.Rectangle((7590, 0), (7710 - 7590),
+                                  1.2,
+                                  fill=True,
                                   edgecolor=(0.8, 0.8, 0.8),
-                                  facecolor=(0.8, 0.8, 0.8), linewidth=1)
+                                  facecolor=(0.8, 0.8, 0.8),
+                                  linewidth=1)
             pylab.gca().add_patch(c)
 
         # Finish drawing the object spectrum plot
@@ -1322,15 +1346,13 @@ class App:
         pylab.legend(loc="upper right", ncol=3)
 
     def redrawPlot(self):
-        self.updatePlot(self.obj[246-self.fibernumberScale.get()]['object'],
-                self.templates[self.templateRadioVar.get()],
-                self.obj[246-self.fibernumberScale.get()]['sky'],
-                self.redshiftScaleVar.get(),
-                tempLabel=os.path.split(templateLabels[
-                    self.templateRadioVar.get()])[-1],
-                redrawSky=True,
-                redrawFeatures=True,
-                plotFeatures=self.plotFeatures)
+        self.updatePlot(self.obj[246 - self.fibernumberScale.get()]['object'],
+                        self.templates[self.templateRadioVar.get()],
+                        self.obj[246 - self.fibernumberScale.get()]['sky'],
+                        self.redshiftScaleVar.get(), tempLabel=os.path.split(
+                            templateLabels[self.templateRadioVar.get()])[-1],
+                        redrawSky=True, redrawFeatures=True,
+                        plotFeatures=self.plotFeatures)
 #        self.updatePlot(self.objSED,
 #                        self.templates[self.templateRadioVar.get()],
 #                        self.skySED,
@@ -1352,7 +1374,7 @@ def fitSEDNorm(p, modelFluxes):
 
 def fitSEDNormErrFunc(p, modelFluxes, observedFluxes):
     x = fitSEDNorm(p, modelFluxes) - observedFluxes
-    chiSq = numpy.sum(x ** 2)   # not really chi sq, duh
+    chiSq = numpy.sum(x**2)  # not really chi sq, duh
     return chiSq
 
 #-----------------------------------------------------------------------------

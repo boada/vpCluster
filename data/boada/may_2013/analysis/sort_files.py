@@ -11,6 +11,6 @@ for f in files:
     if not os.path.isdir(obj[0]):
         os.mkdir(obj[0])
     else:
-       print f, obj[0]
-    shutil.copyfile(f, obj[0]+os.path.sep+f.split('/')[1])
+        print f, obj[0]
+    shutil.copyfile(f, obj[0] + os.path.sep + f.split('/')[1])
     oimg.close()

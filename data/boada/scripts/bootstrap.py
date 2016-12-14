@@ -1,6 +1,7 @@
 from numpy.random import choice
 from numpy import sort
 
+
 def bootstrap(data, statistic, resamples=1000, alpha=0.05, **args):
     """ Returns the bootstrap estimate of the confidence interval for the given
     statistic. The confidence interval is given by 100*(1-alpha). Passes a 1d
@@ -24,6 +25,5 @@ def bootstrap(data, statistic, resamples=1000, alpha=0.05, **args):
 
     samples = choice(data, size=(resamples, len(data)), replace=True)
     stat = sort([statistic(row, **args) for row in samples])
-    return (stat[int((alpha/2.0) * resamples)],
-            stat[int((1-alpha/2.0) * resamples)])
-
+    return (stat[int((alpha / 2.0) * resamples)],
+            stat[int((1 - alpha / 2.0) * resamples)])

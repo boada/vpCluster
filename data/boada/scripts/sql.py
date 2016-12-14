@@ -9,20 +9,23 @@ import numpy as np
 import glob
 import time
 
+
 def filtercomment(sql):
     "Get rid of comments starting with --"
     fsql = ''
     for line in sql.split('\n'):
-        fsql += line.split('--')[0] + ' ' + os.linesep;
+        fsql += line.split('--')[0] + ' ' + os.linesep
     return fsql
 
+
 def query(sql):
-    url='http://cas.sdss.org/public/en/tools/search/x_sql.asp'
+    url = 'http://cas.sdss.org/public/en/tools/search/x_sql.asp'
     fmt = 'csv'
     "Run query and return file object"
     fsql = filtercomment(sql)
-    params = urllib.urlencode({'cmd':fsql, 'format': fmt})
-    return urllib.urlopen(url+'?%s' %params)
+    params = urllib.urlencode({'cmd': fsql, 'format': fmt})
+    return urllib.urlopen(url + '?%s' % params)
+
 
 def work(ra, dec, outfile):
     select = '''SELECT TOP 100
@@ -48,7 +51,7 @@ def work(ra, dec, outfile):
 
     '''
     join = '''JOIN
-    dbo.fGetNearbyObjEq('''+str(ra)+','+str(dec)+''',0.033) AS GN
+    dbo.fGetNearbyObjEq(''' + str(ra) + ',' + str(dec) + ''',0.033) AS GN
     ON
     G.objID = GN.objID
 
@@ -60,7 +63,7 @@ def work(ra, dec, outfile):
     '''
     where = '''Where G.g < 22'''
 
-    sql = select+FROM+join+where
+    sql = select + FROM + join + where
 
     result = query(sql)
 
@@ -70,10 +73,9 @@ def work(ra, dec, outfile):
     else:
         ofp = open(outfile, 'wt')
         while line:
-            ofp.write(string.rstrip(line)+os.linesep)
+            ofp.write(string.rstrip(line) + os.linesep)
             line = result.readline()
         ofp.close()
-
 
 # get file list
 filelist = glob.glob('*D1*') + glob.glob('*D2*') + glob.glob('*D3*')
@@ -94,11 +96,11 @@ for f in filelist:
         os.mkdir(fBits[2])
     os.chdir(fBits[2])
 
-    for fiber, ra, dec in zip(data[:,0], data[:,1], data[:,2]):
-        if not os.path.isfile(fiber.zfill(3)+'.txt'):
+    for fiber, ra, dec in zip(data[:, 0], data[:, 1], data[:, 2]):
+        if not os.path.isfile(fiber.zfill(3) + '.txt'):
             ra = astCoords.hms2decimal(ra, ':')
             dec = astCoords.dms2decimal(dec, ':')
-            work(ra, dec, fiber.zfill(3)+'.txt')
+            work(ra, dec, fiber.zfill(3) + '.txt')
             #print fiber, ra, dec
 
             time.sleep(2)
@@ -106,4 +108,3 @@ for f in filelist:
             pass
 
     os.chdir(cwd)
-

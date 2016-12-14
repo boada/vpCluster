@@ -5,6 +5,7 @@ from astLib import astCoords as aco
 from astLib import astStats as ast
 from astLib import astCalc as aca
 
+
 def parseResults(files):
     ''' Reads all of the results files and puts them into a list with the
     results. Returns field, dither, fiber, and redshift.
@@ -18,19 +19,21 @@ def parseResults(files):
         data = pyl.genfromtxt(f, delimiter='\t', names=True, dtype=None)
         try:
             for fiber, z, Q in zip(data['Fiber'], data['Redshift'],
-                    data['Quality']):
+                                   data['Quality']):
                 if Q == 0:
-                    r.append((field, 'D'+str(dither.rstrip('.results')), fiber,
-                        z))
+                    r.append((field, 'D' + str(dither.rstrip('.results')),
+                              fiber, z))
         except TypeError:
             fiber = int(data['Fiber'])
             z = float(data['Redshift'])
             Q = int(data['Quality'])
             if Q == 0:
-                r.append((field, 'D'+str(dither.rstrip('.results')), fiber, z))
+                r.append(
+                    (field, 'D' + str(dither.rstrip('.results')), fiber, z))
 
     print len(r), 'objects read'
     return r
+
 
 def matchToCatalog(results, catalog):
     ''' Matches the list pumped out from parseResults to the full dataframe.
@@ -39,14 +42,18 @@ def matchToCatalog(results, catalog):
     '''
 
     cat = pd.read_csv(catalog)[['tile', 'dither', 'fiber', 'ra', 'dec']]
-    data = pd.DataFrame(results, columns=['tile', 'dither', 'fiber',
-        'redshift'])
+    data = pd.DataFrame(results,
+                        columns=['tile', 'dither', 'fiber', 'redshift'])
 
     # This does the actual matching
-    matched = pd.merge(cat, data, left_on=['tile', 'dither', 'fiber'],
-            right_on=['tile', 'dither', 'fiber'], how='inner')
+    matched = pd.merge(cat,
+                       data,
+                       left_on=['tile', 'dither', 'fiber'],
+                       right_on=['tile', 'dither', 'fiber'],
+                       how='inner')
 
     return matched
+
 
 def findClusterCenterRedshift(data):
     ''' Finds the center of the cluster in redshift space using the
@@ -55,6 +62,7 @@ def findClusterCenterRedshift(data):
     '''
     x = pyl.copy(data['redshift'].values)
     return ast.biweightLocation(x, tuningConstant=6.0)
+
 
 def findSeperationSpatial(data, center):
     ''' Finds the distance to all of the galaxies from the center of the
@@ -66,27 +74,29 @@ def findSeperationSpatial(data, center):
     data['seperation'] = 0.0
     for row in data.iterrows():
         sepDeg = aco.calcAngSepDeg(center[0], center[1], row[1]['ra'],
-                row[1]['dec'])
-        sepMpc = sepDeg * aca.da(row[1]['redshift'])/57.2957795131
+                                   row[1]['dec'])
+        sepMpc = sepDeg * aca.da(row[1]['redshift']) / 57.2957795131
         data['seperation'][row[0]] = sepMpc
 
     return data
+
 
 def findLOSV(data):
     ''' Finds the line of sight velocity for each of the galaxies.
 
     '''
 
-    c = 2.99E5 # speed of light in km/s
+    c = 2.99E5  # speed of light in km/s
 
     avgz = findClusterCenterRedshift(data)
 
     # Add a new column to the dataframe
     data['LOSV'] = 0.0
     for row in data.iterrows():
-        data['LOSV'][row[0]] = c *(row[1]['redshift'] - avgz)/(1 + avgz)
+        data['LOSV'][row[0]] = c * (row[1]['redshift'] - avgz) / (1 + avgz)
 
     return data
+
 
 def split_list(alist, wanted_parts=1):
     ''' Breaks a list into a number of parts. If it does not divide evenly then
@@ -94,8 +104,9 @@ def split_list(alist, wanted_parts=1):
 
     '''
     length = len(alist)
-    return [ alist[i*length // wanted_parts: (i+1)*length // wanted_parts]
-        for i in range(wanted_parts) ]
+    return [alist[i * length // wanted_parts:(i + 1) * length // wanted_parts]
+            for i in range(wanted_parts)]
+
 
 def rejectInterlopers(data):
     ''' Does all of the work to figure out which galaxies don't belong. Makes
@@ -107,7 +118,7 @@ def rejectInterlopers(data):
     # make some copies so we can sort them around
     sepSorted = data.sort('seperation', ascending=True)
     # How many parts to break into
-    parts = len(data)//2
+    parts = len(data) // 2
     splitData = split_list(data, parts)
 
     # Now we sort the parts by LOSV and find the rejects
@@ -130,11 +141,13 @@ def rejectInterlopers(data):
                 # Always take the more extreme index
                 for index, i in enumerate(indices[0]):
                     if (abs(LOSVsorted['LOSV'][LOSVsorted.index[i]]) -
-                        abs(LOSVsorted['LOSV'][LOSVsorted.index[i+1]])) > 0:
-                            pass
+                            abs(LOSVsorted['LOSV'][LOSVsorted.index[i + 1]])
+                        ) > 0:
+                        pass
                     elif (abs(LOSVsorted['LOSV'][LOSVsorted.index[i]]) -
-                        abs(LOSVsorted['LOSV'][LOSVsorted.index[i+1]])) < 0:
-                            indices[0][index] = i+1
+                          abs(LOSVsorted['LOSV'][LOSVsorted.index[i + 1]])
+                          ) < 0:
+                        indices[0][index] = i + 1
 
                 #print LOSVsorted.index[list(indices[0])]
                 dataframeIndex = list(LOSVsorted.index[list(indices[0])])
@@ -142,10 +155,11 @@ def rejectInterlopers(data):
                 interlopers += dataframeIndex
             else:
                 rejected = False
-    print 'interlopers',interlopers
+    print 'interlopers', interlopers
     return data.drop(interlopers)
 
-catalog ='/Users/steven/Projects/cluster/data/boada/august_2012/catalogs/c328p33+0p19_complete.csv'
+
+catalog = '/Users/steven/Projects/cluster/data/boada/august_2012/catalogs/c328p33+0p19_complete.csv'
 
 files = glob.glob('*.results')
 center = 328.338916667, 0.191869444444

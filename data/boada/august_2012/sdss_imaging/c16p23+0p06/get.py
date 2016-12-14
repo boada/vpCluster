@@ -7,7 +7,8 @@ for f in filelist:
     ofp = open(f, 'rt')
     line = ofp.readline()
     while line:
-        p = subprocess.Popen('curl -O '+line, shell=True,
-                stdout=subprocess.PIPE)
+        p = subprocess.Popen('curl -O ' + line,
+                             shell=True,
+                             stdout=subprocess.PIPE)
         p.wait()
         line = ofp.readline()
