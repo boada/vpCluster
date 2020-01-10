@@ -54,8 +54,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
 param_grid = {"max_depth": [3, None],
               #"max_features": sp_randint(1, 25),
               'max_features': ['auto'],
-              "min_samples_split": sp_randint(1, 25),
-              "min_samples_leaf": sp_randint(1, 10),
+              "min_samples_split": sp_randint(2, 25),
+              "min_samples_leaf": sp_randint(2, 10),
               "bootstrap": [True, False],
               "criterion": ["gini", "entropy"],
               "n_estimators": sp_randint(5, 100)}
@@ -108,6 +108,7 @@ for i in range(2):
         X_test = rfecv.transform(X_test)
 
 for j in range(5):
+    break
     print(j)
     magDict = {}
     with hdf.File('./truth/truth' + str(j).zfill(2) + '_Oii.hdf5', 'r') as f:
